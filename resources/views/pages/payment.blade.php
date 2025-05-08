@@ -16,6 +16,25 @@
             height: 300px;
             object-fit: cover;
         }
+
+        .btn-detail {
+            background: linear-gradient(to right, #91d5ff, #1186fc);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-detail:hover {
+            background: linear-gradient(to left, #91d5ff, #1186fc);
+            box-shadow: 0 6px 16px rgba(17, 134, 252, 0.45);
+        }
     </style>
 
     <body>
@@ -61,6 +80,9 @@
                                 <p class="mb-0 fw-bold text-primary fs-2">1500 บาท</p>
                                 <p class="mb-0 fs-3">ดร.อดิศร ก้อนเงิน</p>
                             </div>
+                            <a href="#" class="btn-detail w-100">
+                                <img src="{{asset('course/icon.png')}}" alt="icon" class="me-2 d-none d-xl-block" style="height: 40px; width: 40px;"> ปริ้นใบเสร็จ
+                            </a>
                         </div>
                     </div>
                     
