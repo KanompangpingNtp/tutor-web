@@ -15,7 +15,7 @@
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
-                            <form action="{{route('CoursesOfferedCreate')}}" method="POST" enctype="multipart/form-data">
+                            <form action="{{route('TutorCoursesOfferedCreate')}}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h1 class="modal-title fs-5" id="exampleModalLabel">เพิ่มคอร์ส</h1>
@@ -40,12 +40,12 @@
 
                                     <div class="mb-3">
                                         <label class="form-label">ติวเตอร์</label>
-                                        <select name="tutor_id" class="form-select" required>
-                                            <option value="">-- เลือกติวเตอร์ --</option>
-                                            @foreach($users as $tutor)
-                                            <option value="{{ $tutor->id }}">{{ $tutor->name }}</option>
-                                            @endforeach
+                                        <select id="user_id_display" class="form-select" disabled>
+                                            <option selected>
+                                                {{ auth()->user()->name }} ({{ auth()->user()->email }})
+                                            </option>
                                         </select>
+                                        <input type="hidden" name="user_id" value="{{ auth()->id() }}">
                                     </div>
 
                                     <div class="mb-3">
@@ -126,7 +126,7 @@
                                         <i class='bx bx-edit'></i>
                                     </button>
 
-                                    <form action="{{ route('deleteCourse', $course->id) }}" method="POST" onsubmit="return confirm('คุณแน่ใจว่าต้องการลบหรือไม่?')">
+                                    <form action="{{ route('TutordeleteCourse', $course->id) }}" method="POST" onsubmit="return confirm('คุณแน่ใจว่าต้องการลบหรือไม่?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm me-1">
@@ -187,7 +187,6 @@
                         </div>
                     </div>
                 </div>
-
                 @endforeach
 
             </div>
@@ -207,7 +206,7 @@
 
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         const editorIds = ["#details", "#details_update"];
 
         editorIds.forEach(id => {
@@ -224,6 +223,7 @@
             }
         });
     });
+
 </script>
 
 @endsection

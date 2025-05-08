@@ -21,6 +21,6 @@ class CheckUserLevel
             return $next($request);
         }
 
-        return redirect()->route('login')->with('error', 'คุณไม่มีสิทธิ์เข้าถึงหน้านี้');
+        return redirect()->route('LoginPage')->with('error', 'คุณไม่มีสิทธิ์เข้าถึงหน้านี้');
     }
 }

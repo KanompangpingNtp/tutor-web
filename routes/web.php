@@ -11,6 +11,8 @@ use App\Http\Controllers\admin\courses_offered\CoursesOfferedController;
 
 use App\Http\Controllers\tutor\TutorController;
 use App\Http\Controllers\tutor\teacher_information\TeacherInformationController;
+use App\Http\Controllers\tutor\subject\SubjectTutorController;
+use App\Http\Controllers\tutor\courses_offered\TutorCoursesOfferedController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,7 +48,7 @@ Route::middleware(['auth', 'check.level:1'])->group(function () {
 
     Route::get('/admin/subject_users', [SubjectUsersController::class, 'SubjectUsersPage'])->name('SubjectUsersPage');
     Route::post('/admin/subject_users/create', [SubjectUsersController::class, 'SubjectUsersCreate'])->name('SubjectUsersCreate');
-    Route::delete('/admin/subject_users/delete/{id}', [SubjectUsersController::class, 'SubjectUsersDelete'])->name('SubjectUsersDelete');
+    Route::delete('/admin/subject_users/delete/{id}/', [SubjectUsersController::class, 'SubjectUsersDelete'])->name('SubjectUsersDelete');
     Route::post('/admin/subject_users/update/{id}', [SubjectUsersController::class, 'SubjectUsersUpdate'])->name('SubjectUsersUpdate');
 
     Route::get('/admin/courses_offered', [CoursesOfferedController::class, 'CoursesOfferedPage'])->name('CoursesOfferedPage');
@@ -62,4 +64,19 @@ Route::middleware(['auth', 'check.level:2'])->group(function () {
     Route::get('/tutor/page', [TutorController::class, 'TutorIndex'])->name('TutorIndex');
 
     Route::get('/tutor/teacher_information', [TeacherInformationController::class, 'TeacherInformationPage'])->name('TeacherInformationPage');
+    Route::post('/tutor/teacher_information/create', [TeacherInformationController::class, 'TeacherPerformanceCreate'])->name('TeacherPerformanceCreate');
+    Route::delete('/tutor/teacher_information/delete/{id}', [TeacherInformationController::class, 'TeacherPerformanceDelete'])->name('TeacherPerformanceDelete');
+
+    Route::get('/tutor/subject_users', [SubjectTutorController::class, 'SubjectTutorPage'])->name('SubjectTutorPage');
+    Route::post('/tutor/subject_users/create', [SubjectTutorController::class, 'SubjectTutorCreate'])->name('SubjectTutorCreate');
+    Route::delete('/tutor/subject_users/delete/{userId}/{subjectId}', [SubjectTutorController::class, 'SubjectTutorDelete'])->name('SubjectTutorDelete');
+    Route::put('/tutor/subject_users/update/{id}', [SubjectTutorController::class, 'SubjectTutorUpdate'])->name('SubjectTutorUpdate');
+
+    Route::get('/tutor/courses_offered', [TutorCoursesOfferedController::class, 'TutorCoursesOfferedPage'])->name('TutorCoursesOfferedPage');
+    Route::post('/tutor/courses_offered/create', [TutorCoursesOfferedController::class, 'TutorCoursesOfferedCreate'])->name('TutorCoursesOfferedCreate');
+    Route::delete('/tutor/courses_offered/delete/{id}', [TutorCoursesOfferedController::class, 'TutordeleteCourse'])->name('TutordeleteCourse');
+    Route::put('/tutor/courses_offered/update/{id}', [TutorCoursesOfferedController::class, 'TutorupdateCourse'])->name('TutorupdateCourse');
+
+Route::delete('/tutor/courses_offered/file/delete/{file}', [TutorController::class, 'deleteFile'])->name('TutordeleteFile');
+
 });

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\admin\courses_offered;
+namespace App\Http\Controllers\tutor\courses_offered;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -8,19 +8,26 @@ use App\Models\User;
 use App\Models\Subject;
 use App\Models\Course;
 use App\Models\CourseFile;
+use Illuminate\Support\Facades\Storage;
 
-class CoursesOfferedController extends Controller
+class TutorCoursesOfferedController extends Controller
 {
-    public function CoursesOfferedPage()
+    public function TutorCoursesOfferedPage()
     {
         $subjects = Subject::all();
-        $users = User::where('level', '2')->get();
-        $courses = Course::with(['subject', 'user', 'files'])->latest()->get();
+        $users = User::where('level', '2')
+            ->where('id', auth()->id())
+            ->get();
 
-        return view('dashboard.admin.courses_offered.page', compact('subjects', 'users', 'courses'));
+        $courses = Course::with(['subject', 'user', 'files'])
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->get();
+
+        return view('dashboard.tutor.courses_offered.page', compact('subjects', 'users', 'courses'));
     }
 
-    public function CoursesOfferedCreate(Request $request)
+    public function TutorCoursesOfferedCreate(Request $request)
     {
         $request->validate([
             'subject_id' => 'required|exists:subjects,id',
@@ -73,7 +80,7 @@ class CoursesOfferedController extends Controller
         return redirect()->back()->with('success', 'เพิ่มคอร์สเรียบร้อยแล้ว');
     }
 
-    public function deleteCourse($id)
+    public function TutordeleteCourse($id)
     {
         $course = Course::findOrFail($id);
 

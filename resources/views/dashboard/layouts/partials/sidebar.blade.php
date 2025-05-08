@@ -95,31 +95,30 @@
         @if (Auth::user()->level == '2')
         <li class="menu-header small text-uppercase"><span class="menu-header-text">จัดการข้อมูล</span></li>
 
-        <li class="menu-item
-            {{ request()->is('admin/tutor_information') ||
-            request()->is('admin/another_subpage') ||
-            request()->is('tutor/teacher_information') ? 'active open' : '' }}">
+        <li class="menu-item {{ request()->is('tutor/teacher_information*') ? 'active' : '' }}">
+            <a href="{{route('TeacherInformationPage')}}" class="menu-link">
+                <i class='menu-icon tf-icons bx bxs-user'></i>
+                <div data-i18n="Analytics">จัดการข้อมูลส่วนตัว</div>
+            </a>
+        </li>
+
+        <li class="menu-item {{ request()->is('tutor/subject_users*') ||
+            request()->is('tutor/courses_offered*') ? 'active open' : '' }}">
             <a href="javascript:void(0)" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-box"></i>
-                <div data-i18n="User interface">ข้อมูลประจำตัว</div>
+                <i class='menu-icon tf-icons bx bx-book'></i>
+                <div data-i18n="User interface">จัดการข้อมูลคอร์สเรียน</div>
             </a>
 
             <ul class="menu-sub">
-                <li class="menu-item {{ request()->is('tutor/teacher_information') ? 'active' : '' }}">
-                    <a href="{{ route('TeacherInformationPage') }}" class="menu-link">
-                        <div>ข้อมูลประจำตัว</div>
+                <li class="menu-item {{ request()->is('tutor/subject_users') ? 'active' : '' }}">
+                    <a href="{{route('SubjectTutorPage')}}" class="menu-link">
+                        <div>จัดการประจำวิชา</div>
                     </a>
                 </li>
 
-                <li class="menu-item {{ request()->is('admin/another_subpage') ? 'active' : '' }}">
-                    <a href="#" class="menu-link">
-                        <div>ตารางการสอน</div>
-                    </a>
-                </li>
-
-                <li class="menu-item {{ request()->is('admin/another_subpage') ? 'active' : '' }}">
-                    <a href="#" class="menu-link">
-                        <div>ประวัติการเข้าสอน</div>
+                <li class="menu-item {{ request()->is('tutor/courses_offered') ? 'active' : '' }}">
+                    <a href="{{route('TutorCoursesOfferedPage')}}" class="menu-link">
+                        <div>จัดการคอร์สที่เปิดสอน</div>
                     </a>
                 </li>
             </ul>
