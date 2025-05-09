@@ -94,6 +94,7 @@
                     </tbody>
                 </table>
 
+                @foreach($subjectUsers as $subjectUser)
                 <div class="modal fade" id="editModal{{ $subjectUser->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $subjectUser->id }}" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -137,6 +138,7 @@
                         </div>
                     </div>
                 </div>
+                @endforeach
 
             </div>
         </div>
