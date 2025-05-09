@@ -9,8 +9,6 @@
     <div class="">
         <div class="card">
             <div class="card-body">
-                <h4 class="fw-bold py-3 mb-4">Dashboard</h4>
-                Welcome to Sneat Dashboard!
 
             </div>
         </div>
