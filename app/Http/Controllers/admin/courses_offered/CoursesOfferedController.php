@@ -33,8 +33,8 @@ class CoursesOfferedController extends Controller
             'course_files' => 'nullable|array',
             'course_files.*' => 'file|mimes:jpg,jpeg,png,mp4,webm|max:51200',
 
-            'course_day' => 'required|array',
-            'course_day.*' => 'required|date',
+            // 'course_day' => 'required|array',
+            // 'course_day.*' => 'required|date',
 
             'course_starttime' => 'required|array',
             'course_starttime.*' => 'required|date_format:H:i',
@@ -56,12 +56,12 @@ class CoursesOfferedController extends Controller
             'course_duration_hour' => $request->course_duration_hour,
         ]);
 
-        $courseTeachingCount = count($request->course_day);
+        $courseTeachingCount = count($request->course_starttime);
 
         for ($i = 0; $i < $courseTeachingCount; $i++) {
             CourseTeaching::create([
                 'course_id' => $course->id,
-                'course_day' => $request->course_day[$i],
+                // 'course_day' => $request->course_day[$i],
                 'course_starttime' => $request->course_starttime[$i],
                 'course_endtime' => $request->course_endtime[$i],
                 'hourly_rate' => $request->hourly_rate[$i],
@@ -111,5 +111,57 @@ class CoursesOfferedController extends Controller
         $course->delete();
 
         return redirect()->back()->with('success', 'ลบคอร์สเรียบร้อยแล้ว');
+    }
+
+    public function CoursesOfferedUpdate(Request $request, $id)
+    {
+        $course = Course::findOrFail($id);
+
+        $course->update([
+            'subject_id' => $request->subject_id,
+            'user_id' => $request->tutor_id,
+            'course_name' => $request->course_name,
+            'course_details' => $request->course_details,
+            'course_duration_hour' => $request->course_duration_hour,
+        ]);
+
+        // ลบตารางเวลาเก่า แล้วเพิ่มใหม่
+        $course->teachings()->delete();
+        foreach ($request->course_starttime as $i => $course_starttime) {
+            CourseTeaching::create([
+                'course_id' => $course->id,
+                // 'course_day' => $day,
+                'course_starttime' => $course_starttime,
+                'course_endtime' => $request->course_endtime[$i],
+                'hourly_rate' => $request->hourly_rate[$i],
+            ]);
+        }
+
+        if ($request->hasFile('course_files_title')) {
+            $file = $request->file('course_files_title');
+            $path = $file->store('course_files', 'public');
+
+            CourseFile::create([
+                'course_id' => $course->id,
+                'file_path' => $path,
+                'file_type' => $file->getClientOriginalExtension(),
+                'status' => 1,
+            ]);
+        }
+
+        if ($request->hasFile('course_files')) {
+            foreach ($request->file('course_files') as $file) {
+                $path = $file->store('course_files', 'public');
+
+                CourseFile::create([
+                    'course_id' => $course->id,
+                    'file_path' => $path,
+                    'file_type' => $file->getClientOriginalExtension(),
+                    'status' => 2,
+                ]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'แก้ไขคอร์สเรียบร้อยแล้ว');
     }
 }

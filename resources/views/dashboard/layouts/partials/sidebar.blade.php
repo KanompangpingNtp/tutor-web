@@ -45,7 +45,7 @@
 
     <ul class="menu-inner py-1">
         @if (Auth::user()->level == '1')
-        <li class="menu-header small text-uppercase"><span class="menu-header-text">เมนูระบบ</span></li>
+        <li class="menu-header small text-uppercase"><span class="menu-header-text">จัดการข้อมูล</span></li>
 
         <li class="menu-item {{ request()->is('admin/tutor_information*') ? 'active' : '' }}">
             <a href="{{ route('TutorInformationPage') }}" class="menu-link">
@@ -83,10 +83,19 @@
             </ul>
         </li>
 
+        <li class="menu-header small text-uppercase"><span class="menu-header-text">เมนูระบบ</span></li>
+
         <li class="menu-item {{ request()->is('admin/income_summary*') ? 'active' : '' }}">
             <a href="{{route('IncomeSummaryPage')}}" class="menu-link">
                 <i class='menu-icon tf-icons bx bx-dollar-circle'></i>
                 <div data-i18n="Analytics">สรุปรายได้ของติวเตอร์</div>
+            </a>
+        </li>
+
+        <li class="menu-item {{ request()->is('admin/booking_history*') ? 'active' : '' }}">
+            <a href="{{route('AdminBookingHistoryPage')}}" class="menu-link">
+                <i class='menu-icon tf-icons bx bxs-news'></i>
+                <div data-i18n="Analytics">ประวัติการจองคอร์ส</div>
             </a>
         </li>
 
@@ -126,7 +135,7 @@
 
         <li class="menu-item {{ request()->is('tutor/teaching_schedule*') ? 'active' : '' }}">
             <a href="{{route('TeachingSchedulePage')}}" class="menu-link">
-                <i class='menu-icon tf-icons bx bx-table' ></i>
+                <i class='menu-icon tf-icons bx bx-table'></i>
                 <div data-i18n="Analytics">ตารางการสอน</div>
             </a>
         </li>

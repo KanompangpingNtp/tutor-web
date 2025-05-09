@@ -11,7 +11,6 @@ class CourseTeaching extends Model
 
     protected $fillable = [
         'course_id',
-        'course_day',
         'course_starttime',
         'course_endtime',
         'hourly_rate',
@@ -20,5 +19,10 @@ class CourseTeaching extends Model
     public function course()
     {
         return $this->belongsTo(Course::class);
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(CourseBooking::class, 'scheduled_datetime', 'id');
     }
 }

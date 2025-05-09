@@ -77,10 +77,10 @@
 
                                     <div id="teaching-schedule-container">
                                         <div class="teaching-schedule-set border p-3 mb-3 rounded">
-                                            <div class="mb-3">
+                                            {{-- <div class="mb-3">
                                                 <label class="form-label">วันที่สอน</label>
                                                 <input type="date" name="course_day[]" class="form-control" required>
-                                            </div>
+                                            </div> --}}
 
                                             <div class="row">
                                                 <div class="mb-3 col-md-6">
@@ -149,7 +149,7 @@
                                         <i class='bx bxs-file'></i>
                                     </button>
 
-                                    <button type="button" class="btn btn-warning btn-sm me-1" data-bs-toggle="modal" data-bs-target="#editCourseModal{{ $course->id }}">
+                                    <button type="button" class="btn btn-warning btn-sm me-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $course->id }}">
                                         <i class='bx bx-edit'></i>
                                     </button>
 
@@ -168,6 +168,166 @@
                 </table>
 
                 @foreach($courses as $course)
+                <div class="modal fade" id="editModal{{ $course->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $course->id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <form action="{{ route('CoursesOfferedUpdate', $course->id) }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
+
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">แก้ไขคอร์ส</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <!-- ชื่อคอร์ส -->
+                                    <div class="mb-3">
+                                        <label class="form-label">ชื่อคอร์ส</label>
+                                        <input type="text" name="course_name" class="form-control" value="{{ old('course_name', $course->course_name) }}" required>
+                                    </div>
+
+                                    <!-- วิชา -->
+                                    <div class="mb-3">
+                                        <label class="form-label">วิชา</label>
+                                        <select name="subject_id" class="form-select" required>
+                                            <option value="">-- เลือกวิชา --</option>
+                                            @foreach($subjects as $subject)
+                                            <option value="{{ $subject->id }}" {{ $subject->id == $course->subject_id ? 'selected' : '' }}>
+                                                {{ $subject->name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <!-- ติวเตอร์ -->
+                                    <div class="mb-3">
+                                        <label class="form-label">ติวเตอร์</label>
+                                        <select name="tutor_id" class="form-select" required>
+                                            <option value="">-- เลือกติวเตอร์ --</option>
+                                            @foreach($users as $tutor)
+                                            <option value="{{ $tutor->id }}" {{ $tutor->id == $course->user_id ? 'selected' : '' }}>
+                                                {{ $tutor->name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <!-- รายละเอียด -->
+                                    <div class="mb-3">
+                                        <div class="form-floating">
+                                            <textarea class="form-control" id="details_update" name="course_details">{{ old('course_details', $course->course_details) }}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <!-- แสดงไฟล์หน้าปก (status = 1) -->
+                                    @if ($course->files->where('status', 1)->count())
+                                    <div class="mb-3">
+                                        <label class="form-label">ภาพหน้าปกที่มีอยู่</label>
+                                        @foreach ($course->files->where('status', 1) as $file)
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" name="delete_files[]" value="{{ $file->id }}" id="deleteFile{{ $file->id }}">
+                                            <label class="form-check-label" for="deleteFile{{ $file->id }}">
+                                                <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank">ไฟล์ {{ $file->file_path }}</a>
+                                            </label>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                    @endif
+
+                                    <!-- แสดงไฟล์ภาพ/วิดีโอ (status = 2) -->
+                                    @if ($course->files->where('status', 2)->count())
+                                    <div class="mb-3">
+                                        <label class="form-label">ไฟล์แนบที่มีอยู่</label>
+                                        @foreach ($course->files->where('status', 2) as $file)
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" name="delete_files[]" value="{{ $file->id }}" id="deleteFile{{ $file->id }}">
+                                            <label class="form-check-label" for="deleteFile{{ $file->id }}">
+                                                <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank">ไฟล์ {{ $file->file_path }}</a>
+                                            </label>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                    @endif
+
+                                    <!-- ชั่วโมงการสอน -->
+                                    <div class="mb-3">
+                                        <label class="form-label">จำนวนชั่วโมงการสอน</label>
+                                        <input type="number" name="course_duration_hour" class="form-control" value="{{ old('course_duration_hour', $course->course_duration_hour) }}" required>
+                                    </div>
+
+                                    <!-- ปุ่มเพิ่ม -->
+                                    <button type="button" class="btn btn-secondary btn-sm mb-3 add-schedule-update">+ เพิ่มเวลาเรียน</button>
+
+                                    <!-- แสดงเวลาเรียนที่มีอยู่ -->
+                                    <div id="teaching-schedule-container">
+                                        @foreach($course->teachings as $teaching)
+                                        <div class="teaching-schedule-set border p-3 mb-3 rounded">
+                                            {{-- <div class="mb-3">
+                                                <label class="form-label">วันที่สอน</label>
+                                                <input type="date" name="course_day[]" class="form-control" value="{{ $teaching->course_day }}" required>
+                                            </div> --}}
+
+                                            <div class="row">
+                                                <div class="mb-3 col-md-6">
+                                                    <label class="form-label">เวลาเริ่มสอน</label>
+                                                    <input type="time" name="course_starttime[]" class="form-control" value="{{ $teaching->course_starttime }}" required>
+                                                </div>
+                                                <div class="mb-3 col-md-6">
+                                                    <label class="form-label">เวลาสิ้นสุดการสอน</label>
+                                                    <input type="time" name="course_endtime[]" class="form-control" value="{{ $teaching->course_endtime }}" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">ค่าจ้างต่อชั่วโมง (บาท)</label>
+                                                <input type="number" step="0.01" name="hourly_rate[]" class="form-control" value="{{ $teaching->hourly_rate }}" required>
+                                            </div>
+
+                                            <button type="button" class="btn btn-danger btn-sm remove-schedule">ลบชุดนี้</button>
+                                        </div>
+                                        @endforeach
+                                    </div>
+
+                                    <!-- Template ซ่อนไว้ สำหรับ clone -->
+                                    <template id="schedule-template">
+                                        <div class="teaching-schedule-set border p-3 mb-3 rounded">
+                                            {{-- <div class="mb-3">
+                                                <label class="form-label">วันที่สอน</label>
+                                                <input type="date" name="course_day[]" class="form-control" required>
+                                            </div> --}}
+
+                                            <div class="row">
+                                                <div class="mb-3 col-md-6">
+                                                    <label class="form-label">เวลาเริ่มสอน</label>
+                                                    <input type="time" name="course_starttime[]" class="form-control" required>
+                                                </div>
+                                                <div class="mb-3 col-md-6">
+                                                    <label class="form-label">เวลาสิ้นสุดการสอน</label>
+                                                    <input type="time" name="course_endtime[]" class="form-control" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">ค่าจ้างต่อชั่วโมง (บาท)</label>
+                                                <input type="number" step="0.01" name="hourly_rate[]" class="form-control" required>
+                                            </div>
+
+                                            <button type="button" class="btn btn-danger btn-sm remove-schedule">ลบชุดนี้</button>
+                                        </div>
+                                    </template>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                                    <button type="submit" class="btn btn-primary">อัปเดตคอร์ส</button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
                 <div class="modal fade" id="filesModal{{ $course->id }}" tabindex="-1" aria-labelledby="filesModalLabel{{ $course->id }}" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
@@ -231,7 +391,6 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>วันที่สอน</th>
                                             <th>เวลาเริ่ม</th>
                                             <th>เวลาสิ้นสุด</th>
                                             <th>ค่าจ้าง/ชม. (บาท)</th>
@@ -241,7 +400,6 @@
                                     <tbody>
                                         @foreach($course->teachings as $teaching)
                                         <tr>
-                                            <td>{{ \Carbon\Carbon::parse($teaching->course_day)->format('d/m/Y') }}</td>
                                             <td>{{ \Carbon\Carbon::parse($teaching->course_starttime)->format('H:i') }}</td>
                                             <td>{{ \Carbon\Carbon::parse($teaching->course_endtime)->format('H:i') }}</td>
                                             <td>{{ number_format($teaching->hourly_rate, 2) }}</td>
@@ -323,5 +481,25 @@
     });
 
 </script>
+
+<script>
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('add-schedule-update')) {
+        const modalBody = e.target.closest('.modal-body');
+        const template = modalBody.querySelector('#schedule-template');
+        const clone = template.content.cloneNode(true);
+        modalBody.querySelector('#teaching-schedule-container').appendChild(clone);
+    }
+
+    if (e.target.classList.contains('remove-schedule')) {
+        const scheduleSets = e.target.closest('.modal-body').querySelectorAll('.teaching-schedule-set');
+        if (scheduleSets.length > 1) {
+            e.target.closest('.teaching-schedule-set').remove();
+        }
+    }
+});
+
+</script>
+
 
 @endsection

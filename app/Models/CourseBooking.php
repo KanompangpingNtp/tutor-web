@@ -16,6 +16,8 @@ class CourseBooking extends Model
         'scheduled_datetime',
         'status',
         'note',
+        'payment_status',
+        'transfer_slip'
     ];
 
     public function course()
@@ -26,5 +28,10 @@ class CourseBooking extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function teachings()
+    {
+        return $this->belongsTo(CourseTeaching::class, 'scheduled_datetime');
     }
 }

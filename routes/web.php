@@ -9,6 +9,7 @@ use App\Http\Controllers\admin\subject\SubjectController;
 use App\Http\Controllers\admin\subject\SubjectUsersController;
 use App\Http\Controllers\admin\income_summary\IncomeSummaryController;
 use App\Http\Controllers\admin\courses_offered\CoursesOfferedController;
+use App\Http\Controllers\admin\booking_history\BookingHistoryController;
 
 use App\Http\Controllers\tutor\TutorController;
 use App\Http\Controllers\tutor\teacher_information\TeacherInformationController;
@@ -18,7 +19,7 @@ use App\Http\Controllers\tutor\teaching_schedule\TeachingScheduleController;
 
 use App\Http\Controllers\users\subject_category\SubjectCategoryController;
 use App\Http\Controllers\users\course\CourseController;
-use App\Http\Controllers\users\teacher_history\TeacherHistoryController;
+use App\Http\Controllers\users\account\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,12 +42,17 @@ Route::get('/', [HomeController::class, 'Home'])->name('Home');
 Route::get('/subject_category/page', [HomeController::class, 'SubjectCategory'])->name('SubjectCategory');
 
 Route::get('/subject_category/course/page/{id}', [HomeController::class, 'CoursePage'])->name('CoursePage');
+Route::get('/subject_category/course/detail/page/{id}', [HomeController::class, 'CourseDetail'])->name('CourseDetail');
+Route::get('/course_bookings/{id}', [CourseController::class, 'BookingPage'])->name('BookingPage');
+Route::post('/course_bookings/create', [CourseController::class, 'BookingCreate'])->name('BookingCreate');
 
 Route::get('/subject_category/course/teacher_history/{id}', [HomeController::class, 'TeacherHistoryPage'])->name('TeacherHistoryPage');
 
 //auth
 Route::get('/LoginPage', [AuthController::class, 'LoginPage'])->name('LoginPage');
+Route::get('/RegisterPage', [AuthController::class, 'RegisterPage'])->name('RegisterPage');
 Route::post('/login', [AuthController::class, 'Login'])->name('Login');
+Route::post('/register', [AuthController::class, 'Register'])->name('Register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth', 'check.level:1'])->group(function () {
@@ -69,10 +75,13 @@ Route::middleware(['auth', 'check.level:1'])->group(function () {
     Route::get('/admin/courses_offered', [CoursesOfferedController::class, 'CoursesOfferedPage'])->name('CoursesOfferedPage');
     Route::post('/admin/courses_offered/create', [CoursesOfferedController::class, 'CoursesOfferedCreate'])->name('CoursesOfferedCreate');
     Route::delete('/admin/courses_offered/delete/{id}', [CoursesOfferedController::class, 'deleteCourse'])->name('deleteCourse');
-    Route::post('/admin/courses_offered/update/{id}', [CoursesOfferedController::class, 'updateCourse'])->name('updateCourse');
-    Route::delete('/admin/courses_offered/delete/files/{id}', [CoursesOfferedController::class, 'deleteFile'])->name('deleteFile');
+    Route::put('/admin/courses_offered/update/{id}', [CoursesOfferedController::class, 'CoursesOfferedUpdate'])->name('CoursesOfferedUpdate');
 
     Route::get('/admin/income_summary', [IncomeSummaryController::class, 'IncomeSummaryPage'])->name('IncomeSummaryPage');
+
+    Route::get('/admin/booking_history', [BookingHistoryController::class, 'AdminBookingHistoryPage'])->name('AdminBookingHistoryPage');
+    Route::put('/admin/booking_history/update-status/{id}', [BookingHistoryController::class, 'BookingHistoryUpdateStatus'])->name('BookingHistoryUpdateStatus');
+    Route::delete('/admin/booking_history/booking-history/{id}', [BookingHistoryController::class, 'AdminBookingHistoryDelete'])->name('AdminBookingHistoryDelete');
 });
 
 Route::middleware(['auth', 'check.level:2'])->group(function () {
@@ -93,4 +102,8 @@ Route::middleware(['auth', 'check.level:2'])->group(function () {
     Route::put('/tutor/courses_offered/update/{id}', [TutorCoursesOfferedController::class, 'TutorupdateCourse'])->name('TutorupdateCourse');
 
     Route::get('/tutor/teaching_schedule', [TeachingScheduleController::class, 'TeachingSchedulePage'])->name('TeachingSchedulePage');
+});
+
+Route::middleware(['auth', 'check.level:3'])->group(function () {
+    Route::get('/users/account/detail', [UsersController::class, 'UsersAccount'])->name('UsersAccount');
 });

@@ -43,12 +43,14 @@
     <div class="container-xxl">
         <div class="authentication-wrapper authentication-basic container-p-y">
             <div class="authentication-inner">
-                <!-- Register -->
+
+                <!-- Register Card -->
                 <div class="card">
                     <div class="card-body">
+
                         <!-- Logo -->
-                        <div class="app-brand justify-content-center">
-                            <a href="index.html" class="app-brand-link gap-2">
+                        <div class="app-brand justify-content-center mb-4">
+                            <a href="/" class="app-brand-link gap-2">
                                 <span class="app-brand-logo demo">
                                     <svg width="25" viewBox="0 0 25 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                         <defs>
@@ -83,49 +85,73 @@
                                         </g>
                                     </svg>
                                 </span>
-                                <span class="app-brand-text demo text-body fw-bolder">ลงชื่อเข้าใช้งานระบบ</span>
+                                <span class="app-brand-text demo text-body fw-bolder">สมัครเข้าใช้ระบบ</span>
                             </a>
                         </div>
-                        <!-- /Logo -->
-                        <h4 class="mb-2">Welcome to Login! 👋</h4>
-                        <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
-                        <form id="formAuthentication" class="mb-3" action="{{ route('Login') }}" method="POST">
+                        <h4 class="mb-2">ลงทะเบียนบัญชีใหม่</h4>
+                        <p class="mb-4">กรอกข้อมูลด้านล่างเพื่อสร้างบัญชีของคุณ</p>
+
+                        <form id="formAuthentication" class="mb-3" method="POST" action="{{ route('Register') }}">
                             @csrf
+
                             <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email or username" autofocus />
-                                @error('email')
-                                <div class="text-danger">{{ $message }}</div>
+                                <label for="name" class="form-label">ชื่อ-นามสกุล</label>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" required autofocus>
+                                @error('name')
+                                <span class="text-danger small">{{ $message }}</span>
                                 @enderror
                             </div>
+
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">เบอร์โทร</label>
+                                <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}" required>
+                                @error('phone')
+                                <span class="text-danger small">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">อีเมล</label>
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
+                                @error('email')
+                                <span class="text-danger small">{{ $message }}</span>
+                                @enderror
+                            </div>
+
                             <div class="mb-3 form-password-toggle">
-                                <div class="d-flex justify-content-between">
-                                    <label class="form-label" for="password">Password</label>
-                                </div>
+                                <label class="form-label" for="password">รหัสผ่าน</label>
                                 <div class="input-group input-group-merge">
-                                    <input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
+                                    <input type="password" id="password" class="form-control @error('password') is-invalid @enderror" name="password" required>
                                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                                 </div>
                                 @error('password')
-                                <div class="text-danger">{{ $message }}</div>
+                                <span class="text-danger small">{{ $message }}</span>
                                 @enderror
                             </div>
-                            <div class="mb-3">
-                                <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
+
+                            <div class="mb-3 form-password-toggle">
+                                <label class="form-label" for="password_confirmation">ยืนยันรหัสผ่าน</label>
+                                <div class="input-group input-group-merge">
+                                    <input type="password" id="password_confirmation" class="form-control" name="password_confirmation" required>
+                                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                                </div>
                             </div>
+
+                            <button class="btn btn-primary d-grid w-100">ลงทะเบียน</button>
                         </form>
 
-
-                        {{-- <p class="text-center">
-                            <span>New on our platform?</span>
-                            <a href="auth-register-basic.html">
-                                <span>Create an account</span>
+                        <p class="text-center mt-3">
+                            <span>มีบัญชีอยู่แล้ว?</span>
+                            <a href="{{route('LoginPage')}}">
+                                <span>เข้าสู่ระบบ</span>
                             </a>
-                        </p> --}}
+                        </p>
+
                     </div>
                 </div>
-                <!-- /Register -->
+                <!-- /Register Card -->
+
             </div>
         </div>
     </div>

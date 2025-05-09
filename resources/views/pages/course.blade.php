@@ -94,7 +94,7 @@
                                 <a href="{{route('TeacherHistoryPage',$course->id)}}" class="text-primary fw-semibold" style="font-size: 13px; text-decoration: none;"><span style="color: black;">ผู้สอน </span>{{$course->user->name}}</a>
                             </div>
 
-                            <a href="#" class="btn-detail w-100">
+                            <a href="{{route('CourseDetail',$course->id)}}" class="btn-detail w-100">
                                 <img src="{{asset('course/icon.png')}}" alt="icon" class="me-2 d-none d-xl-block" style="height: 40px; width: 40px;"> รายละเอียดคอร์สเรียน
                             </a>
                         </div>

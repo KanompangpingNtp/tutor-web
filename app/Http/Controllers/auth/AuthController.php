@@ -30,6 +30,8 @@ class AuthController extends Controller
                 return redirect()->route('AdminIndex');
             } elseif (Auth::user()->level === '2') {
                 return redirect()->route('TutorIndex');
+            } elseif (Auth::user()->level === '3') {
+                return redirect()->route('SubjectCategory');
             }
         }
 
@@ -45,6 +47,31 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('LoginPage');
+        return redirect()->route('Home');
+    }
+
+    public function RegisterPage()
+    {
+        return view('auth.register');
+    }
+
+    public function Register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+            'phone' => 'required|string',
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'level' => 3,
+        ]);
+
+        return redirect()->route('LoginPage')->with('success', 'ลงทะเบียนเรียบร้อยแล้ว กรุณาเข้าสู่ระบบ');
     }
 }

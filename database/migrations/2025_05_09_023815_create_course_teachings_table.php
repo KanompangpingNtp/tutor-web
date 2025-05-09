@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('course_teachings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
-            $table->date('course_day');
             $table->time('course_starttime');
             $table->time('course_endtime');
             $table->decimal('hourly_rate', 10, 2);

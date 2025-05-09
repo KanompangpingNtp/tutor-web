@@ -33,7 +33,14 @@ class HomeController extends Controller
         return view('pages.course', compact('subject', 'courses'));
     }
 
-    public function TeacherHistoryPage ()
+    public function CourseDetail($id)
+    {
+        $courses = Course::with('user','teachings')->find($id);
+
+        return view('pages.detail-course', compact('courses'));
+    }
+
+    public function TeacherHistoryPage()
     {
         return view('pages.teacher-history');
     }

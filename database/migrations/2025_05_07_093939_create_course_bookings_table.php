@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->dateTime('booking_date');
-            $table->dateTime('scheduled_datetime');
             $table->string('status');
             $table->string('note')->nullable();
             $table->timestamps();

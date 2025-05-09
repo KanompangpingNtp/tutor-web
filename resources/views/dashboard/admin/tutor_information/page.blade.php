@@ -54,6 +54,8 @@
                                 แอดมิน
                                 @elseif($user->level == 2)
                                 ติวเตอร์ผู้สอน
+                                @elseif($user->level == 3)
+                                ผู้ใช้งานทั่วไป
                                 @endif
                             </td>
                             <td>

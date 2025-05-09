@@ -7,6 +7,7 @@
     <title>@yield('title', 'Default Title')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <style>
     @font-face {
@@ -163,9 +164,20 @@
     ::-webkit-scrollbar-thumb:hover {
         background-color: #f0f0f0;
     }
+
 </style>
 
 <body>
+
+    @if ($message = Session::get('success'))
+    <script>
+        Swal.fire({
+            icon: 'success'
+            , title: '{{ $message }}'
+        , });
+
+    </script>
+    @endif
 
     {{-- Top Navbar: แสดงเฉพาะบน desktop --}}
     <nav class="navbar navbar-expand-lg navbar-dark  p-0">
@@ -182,34 +194,32 @@
                 <ul class="navbar-nav align-items-center">
 
                     @guest
-                        <li class="nav-item me-2">
-                            <a class="btn-register" href="">สมัครสมาชิก</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="btn-login" href="{{route('LoginPage')}}">เข้าสู่ระบบ</a>
-                        </li>
+                    <li class="nav-item me-2">
+                        <a class="btn-register" href="{{route('RegisterPage')}}">สมัครสมาชิก</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn-login" href="{{route('LoginPage')}}">เข้าสู่ระบบ</a>
+                    </li>
                     @endguest
                     @auth
-                        <li class="nav-item dropdown ">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
-                                data-bs-toggle="dropdown">
-                                <img src="{{ asset('navbar/user-unknow.png') }}" alt="avatar"
-                                    class="rounded-circle me-2 bg-white profile-shadow" style="width: 5rem;">
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">โปรไฟล์ของฉัน</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li>
-                                    <form method="POST" action="{{route('logout')}}">
-                                        @csrf
-                                        <button class="dropdown-item" type="submit">ออกจากระบบ</button>
-                                    </form>
-                                </li>
-                            </ul>
+                    <li class="nav-item dropdown ">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                            <img src="{{ asset('navbar/user-unknow.png') }}" alt="avatar" class="rounded-circle me-2 bg-white profile-shadow" style="width: 5rem;">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{route('UsersAccount')}}">โปรไฟล์ของฉัน</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <form method="POST" action="{{route('logout')}}">
+                                    @csrf
+                                    <button class="dropdown-item" type="submit">ออกจากระบบ</button>
+                                </form>
+                            </li>
+                        </ul>
 
-                        </li>
+                    </li>
                     @endauth
                 </ul>
             </div>
@@ -224,29 +234,28 @@
         </a>
         <div class="dropdown-center " style="margin-top: -4rem">
             <a class="nav-link d-flex align-items-center " href="#" role="button" data-bs-toggle="dropdown">
-                <img src="{{ asset('navbar/user-unknow.png') }}" alt="avatar"
-                    class="rounded-circle me-2 bg-white profile-shadow" style="width: 6.5rem;">
+                <img src="{{ asset('navbar/user-unknow.png') }}" alt="avatar" class="rounded-circle me-2 bg-white profile-shadow" style="width: 6.5rem;">
             </a>
             <ul class="dropdown-menu dropdown-menu-center ">
                 @auth
-                    <li><a class="dropdown-item" href="#">โปรไฟล์ของฉัน</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li>
-                        <form method="POST" action="">
-                            @csrf
-                            <button class="dropdown-item" type="submit">ออกจากระบบ</button>
-                        </form>
-                    </li>
+                <li><a class="dropdown-item" href="{{route('UsersAccount')}}">โปรไฟล์ของฉัน</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    <form method="POST" action="{{route('logout')}}">
+                        @csrf
+                        <button class="dropdown-item" type="submit">ออกจากระบบ</button>
+                    </form>
+                </li>
                 @endauth
 
                 @guest
-                    <li><a class="dropdown-item text-dark" href="">สมัครสมาชิก</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item text-dark" href="">เข้าสู่ระบบ</a></li>
+                <li><a class="dropdown-item text-dark" href="{{route('RegisterPage')}}">สมัครสมาชิก</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item text-dark" href="{{route('LoginPage')}}">เข้าสู่ระบบ</a></li>
                 @endguest
             </ul>
         </div>
