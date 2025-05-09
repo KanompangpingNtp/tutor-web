@@ -55,7 +55,6 @@
                             </a>
                         </div>
 
-                        <h4 class="mb-2">ลงทะเบียนบัญชีใหม่</h4>
                         <p class="mb-4">กรอกข้อมูลด้านล่างเพื่อสร้างบัญชีของคุณ</p>
 
                         <form id="formAuthentication" class="mb-3" method="POST" action="{{ route('Register') }}">
