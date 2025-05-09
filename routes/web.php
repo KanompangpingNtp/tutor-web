@@ -32,7 +32,7 @@ use App\Http\Controllers\users\teacher_history\TeacherHistoryController;
 */
 
 Route::get('/test', function () {
-    return view('pages.payment');
+    return view('pages.detail-course');
 });
 
 
