@@ -14,6 +14,7 @@ use App\Http\Controllers\tutor\TutorController;
 use App\Http\Controllers\tutor\teacher_information\TeacherInformationController;
 use App\Http\Controllers\tutor\subject\SubjectTutorController;
 use App\Http\Controllers\tutor\courses_offered\TutorCoursesOfferedController;
+use App\Http\Controllers\tutor\teaching_schedule\TeachingScheduleController;
 
 use App\Http\Controllers\users\subject_category\SubjectCategoryController;
 use App\Http\Controllers\users\course\CourseController;
@@ -91,6 +92,5 @@ Route::middleware(['auth', 'check.level:2'])->group(function () {
     Route::delete('/tutor/courses_offered/delete/{id}', [TutorCoursesOfferedController::class, 'TutordeleteCourse'])->name('TutordeleteCourse');
     Route::put('/tutor/courses_offered/update/{id}', [TutorCoursesOfferedController::class, 'TutorupdateCourse'])->name('TutorupdateCourse');
 
-Route::delete('/tutor/courses_offered/file/delete/{file}', [TutorController::class, 'deleteFile'])->name('TutordeleteFile');
-
+    Route::get('/tutor/teaching_schedule', [TeachingScheduleController::class, 'TeachingSchedulePage'])->name('TeachingSchedulePage');
 });

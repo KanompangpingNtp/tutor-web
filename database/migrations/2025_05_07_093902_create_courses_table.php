@@ -16,9 +16,8 @@ return new class extends Migration
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->text('course_name');
-            $table->integer('course_duration_hour');
-            $table->decimal('course_price');
             $table->text('course_details');
+            $table->integer('course_duration_hour');
             $table->timestamps();
         });
     }

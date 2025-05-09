@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_performances', function (Blueprint $table) {
+        Schema::create('course_teachings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('title_work')->nullable();
-            $table->string('detail_work')->nullable();
-            $table->string('file_path')->nullable();
-            $table->string('file_type')->nullable();
+            $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
+            $table->date('course_day');
+            $table->time('course_starttime');
+            $table->time('course_endtime');
+            $table->decimal('hourly_rate', 10, 2);
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_performances');
+        Schema::dropIfExists('course_teachings');
     }
 };

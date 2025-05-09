@@ -26,7 +26,7 @@ class HomeController extends Controller
     {
         $subject = Subject::findOrFail($id);
 
-        $courses = Course::with('user', 'files')
+        $courses = Course::with('user', 'files', 'teachings')
             ->where('subject_id', $id)
             ->get();
 

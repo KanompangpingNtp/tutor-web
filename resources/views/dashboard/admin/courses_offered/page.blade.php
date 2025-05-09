@@ -49,16 +49,6 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label class="form-label">ระยะเวลาคอร์ส (ชั่วโมง)</label>
-                                        <input type="number" name="course_duration_hour" class="form-control" step="0.1" min="0" required>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">ราคาคอร์ส (บาท)</label>
-                                        <input type="number" name="course_price" class="form-control" step="0.01" min="0" required>
-                                    </div>
-
-                                    <div class="mb-3">
                                         <div class="form-floating">
                                             <textarea class="form-control" placeholder="รายละเอียดคอร์ส" id="details" name="course_details"></textarea>
                                         </div>
@@ -77,6 +67,41 @@
                                             <div class="d-flex flex-wrap gap-3"></div>
                                         </div>
                                     </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">จำนวนชั่วโมงการสอน</label>
+                                        <input type="number" name="course_duration_hour" class="form-control" required>
+                                    </div>
+
+                                    <button type="button" class="btn btn-secondary btn-sm mb-3" id="add-schedule">+ เพิ่มเวลาเรียน</button>
+
+                                    <div id="teaching-schedule-container">
+                                        <div class="teaching-schedule-set border p-3 mb-3 rounded">
+                                            <div class="mb-3">
+                                                <label class="form-label">วันที่สอน</label>
+                                                <input type="date" name="course_day[]" class="form-control" required>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="mb-3 col-md-6">
+                                                    <label class="form-label">เวลาเริ่มสอน</label>
+                                                    <input type="time" name="course_starttime[]" class="form-control" required>
+                                                </div>
+                                                <div class="mb-3 col-md-6">
+                                                    <label class="form-label">เวลาสิ้นสุดการสอน</label>
+                                                    <input type="time" name="course_endtime[]" class="form-control" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">ค่าจ้างต่อชั่วโมง (บาท)</label>
+                                                <input type="number" step="0.01" name="hourly_rate[]" class="form-control" required>
+                                            </div>
+
+                                            <button type="button" class="btn btn-danger btn-sm remove-schedule">ลบชุดนี้</button>
+                                        </div>
+                                    </div>
+
                                 </div>
 
                                 <div class="modal-footer">
@@ -97,8 +122,7 @@
                             <th>ชื่อคอร์ส</th>
                             <th>วิชา</th>
                             <th>ติวเตอร์</th>
-                            <th>ระยะเวลา (ชม.)</th>
-                            <th>ราคา (บาท)</th>
+                            <th>ระยะเวลา (ชม.) การสอน</th>
                             <th>รายละเอียด</th>
                             <th>action</th>
                         </tr>
@@ -109,8 +133,11 @@
                             <td>{{ $course->course_name }}</td>
                             <td>{{ $course->subject->name ?? '-' }}</td>
                             <td>{{ $course->user->name ?? '-' }}</td>
-                            <td>{{ $course->course_duration_hour }} ชม.</td>
-                            <td>{{ number_format($course->course_price, 2) }}</td>
+                            <td class="text-center">
+                                <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#teachingModal{{ $course->id }}">
+                                    <i class='bx bx-time-five'></i>
+                                </button>
+                            </td>
                             <td>
                                 <a href="#" data-bs-toggle="modal" data-bs-target="#courseDetailsModal{{ $course->id }}">
                                     {{ Str::limit(strip_tags($course->course_details), 30) }}
@@ -188,6 +215,55 @@
                     </div>
                 </div>
 
+                <div class="modal fade" id="teachingModal{{ $course->id }}" tabindex="-1" aria-labelledby="teachingModalLabel{{ $course->id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="teachingModalLabel{{ $course->id }}">
+                                    รายละเอียดการสอนของคอร์ส: {{ $course->course_name }}
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="ปิด"></button>
+                            </div>
+                            <div class="modal-body">
+                                @if ($course->teachings->isEmpty())
+                                <p>ไม่มีข้อมูลการสอน</p>
+                                @else
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>วันที่สอน</th>
+                                            <th>เวลาเริ่ม</th>
+                                            <th>เวลาสิ้นสุด</th>
+                                            <th>ค่าจ้าง/ชม. (บาท)</th>
+                                            <th>รวมระยะเวลา (ชม.)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($course->teachings as $teaching)
+                                        <tr>
+                                            <td>{{ \Carbon\Carbon::parse($teaching->course_day)->format('d/m/Y') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($teaching->course_starttime)->format('H:i') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($teaching->course_endtime)->format('H:i') }}</td>
+                                            <td>{{ number_format($teaching->hourly_rate, 2) }}</td>
+                                            <td>
+                                                @php
+                                                $start = \Carbon\Carbon::parse($teaching->course_starttime);
+                                                $end = \Carbon\Carbon::parse($teaching->course_endtime);
+                                                $totalHours = $start->diffInHours($end); // หาชั่วโมง
+                                                @endphp
+
+                                                {{ $totalHours }} ชม.
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 @endforeach
 
             </div>
@@ -207,7 +283,7 @@
 
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         const editorIds = ["#details", "#details_update"];
 
         editorIds.forEach(id => {
@@ -224,6 +300,28 @@
             }
         });
     });
+
+</script>
+
+<script>
+    document.getElementById('add-schedule').addEventListener('click', function() {
+        const container = document.getElementById('teaching-schedule-container');
+        const newSet = container.firstElementChild.cloneNode(true);
+
+        // เคลียร์ค่าที่ถูก clone
+        newSet.querySelectorAll('input').forEach(input => input.value = '');
+        container.appendChild(newSet);
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-schedule')) {
+            const scheduleSets = document.querySelectorAll('.teaching-schedule-set');
+            if (scheduleSets.length > 1) {
+                e.target.closest('.teaching-schedule-set').remove();
+            }
+        }
+    });
+
 </script>
 
 @endsection

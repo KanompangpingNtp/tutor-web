@@ -124,6 +124,13 @@
             </ul>
         </li>
 
+        <li class="menu-item {{ request()->is('tutor/teaching_schedule*') ? 'active' : '' }}">
+            <a href="{{route('TeachingSchedulePage')}}" class="menu-link">
+                <i class='menu-icon tf-icons bx bx-table' ></i>
+                <div data-i18n="Analytics">ตารางการสอน</div>
+            </a>
+        </li>
+
         @endif
     </ul>
 </aside>

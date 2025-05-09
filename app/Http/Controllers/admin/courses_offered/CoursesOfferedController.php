@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Subject;
 use App\Models\Course;
 use App\Models\CourseFile;
+use App\Models\CourseTeaching;
 
 class CoursesOfferedController extends Controller
 {
@@ -15,7 +16,7 @@ class CoursesOfferedController extends Controller
     {
         $subjects = Subject::all();
         $users = User::where('level', '2')->get();
-        $courses = Course::with(['subject', 'user', 'files'])->latest()->get();
+        $courses = Course::with(['subject', 'user', 'files', 'teachings'])->latest()->get();
 
         return view('dashboard.admin.courses_offered.page', compact('subjects', 'users', 'courses'));
     }
@@ -26,12 +27,23 @@ class CoursesOfferedController extends Controller
             'subject_id' => 'required|exists:subjects,id',
             'tutor_id' => 'required|exists:users,id',
             'course_name' => 'required|string',
-            'course_duration_hour' => 'required|numeric',
-            'course_price' => 'required|numeric',
             'course_details' => 'required|string',
+            'course_duration_hour' => 'required|numeric',
             'course_files_title' => 'file|mimes:jpg,jpeg,png|max:21200',
             'course_files' => 'nullable|array',
             'course_files.*' => 'file|mimes:jpg,jpeg,png,mp4,webm|max:51200',
+
+            'course_day' => 'required|array',
+            'course_day.*' => 'required|date',
+
+            'course_starttime' => 'required|array',
+            'course_starttime.*' => 'required|date_format:H:i',
+
+            'course_endtime' => 'required|array',
+            'course_endtime.*' => 'required|date_format:H:i|after:course_starttime.*',
+
+            'hourly_rate' => 'required|array',
+            'hourly_rate.*' => 'required|numeric|min:0',
         ]);
 
         // dd($request);
@@ -40,10 +52,21 @@ class CoursesOfferedController extends Controller
             'subject_id' => $request->subject_id,
             'user_id' => $request->tutor_id,
             'course_name' => $request->course_name,
-            'course_duration_hour' => $request->course_duration_hour,
-            'course_price' => $request->course_price,
             'course_details' => $request->course_details,
+            'course_duration_hour' => $request->course_duration_hour,
         ]);
+
+        $courseTeachingCount = count($request->course_day);
+
+        for ($i = 0; $i < $courseTeachingCount; $i++) {
+            CourseTeaching::create([
+                'course_id' => $course->id,
+                'course_day' => $request->course_day[$i],
+                'course_starttime' => $request->course_starttime[$i],
+                'course_endtime' => $request->course_endtime[$i],
+                'hourly_rate' => $request->hourly_rate[$i],
+            ]);
+        }
 
         if ($request->hasFile('course_files_title')) {
             $file = $request->file('course_files_title');
@@ -87,6 +110,6 @@ class CoursesOfferedController extends Controller
 
         $course->delete();
 
-        return redirect()->route('courses.index')->with('success', 'ลบคอร์สเรียบร้อยแล้ว');
+        return redirect()->back()->with('success', 'ลบคอร์สเรียบร้อยแล้ว');
     }
 }

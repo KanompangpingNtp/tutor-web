@@ -202,7 +202,7 @@
                                     <hr class="dropdown-divider">
                                 </li>
                                 <li>
-                                    <form method="POST" action="">
+                                    <form method="POST" action="{{route('logout')}}">
                                         @csrf
                                         <button class="dropdown-item" type="submit">ออกจากระบบ</button>
                                     </form>
