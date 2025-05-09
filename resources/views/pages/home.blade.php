@@ -134,7 +134,8 @@
                             <li><i class="fas fa-check-circle"></i> แสกนจ่ายค่าเรียนได้อย่างปลอดภัย</li>
                         </ul>
 
-                        <button class="btn-search mt-4">เริ่มการค้นหา <img src="{{asset('home/star.png')}}" alt="star" width="45"></button>
+                        {{-- <button class="btn-search mt-4">เริ่มการค้นหา <img src="{{asset('home/star.png')}}" alt="star" width="45"></button> --}}
+                        <a href="{{route('SubjectCategory')}}" class="btn-search mt-4" style="text-decoration: none;">เริ่มการค้นหา <img src="{{asset('home/star.png')}}" alt="star" width="45"></a>
                     </div>
 
                     <!-- Right image -->

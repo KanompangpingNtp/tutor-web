@@ -20,7 +20,7 @@
     border-radius: 20px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
     width: 250px;
-    
+
     object-fit: cover;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -42,30 +42,30 @@
                     <div class="col-lg-4 d-flex flex-column justify-content-center align-items-center">
                         <img src="{{ asset('teacher-history/รูปตัวอย่างคน.png') }}" alt="img-teacher"
                             class="img-fluid img-teacher mb-3">
-                        <div class="row justify-content-evenly align-items-center">
+                        {{-- <div class="row justify-content-evenly align-items-center">
                             <a href="#" class=" col-5">
                                 <img src="{{ asset('teacher-history/image.png') }}" alt="course" class="img-fluid img-couse  mb-3">
                             </a>
                             <a href="#" class=" col-5">
                                 <img src="{{ asset('teacher-history/image (1).png') }}" alt="course" class="img-fluid img-couse  mb-3">
                             </a>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="col-lg-8 d-flex flex-column justify-content-start align-items-start p-4 bg-white shadow rounded-4">
                         <h3 class="text-center mb-0">ชื่อผู้สอน</h3>
                         <div class="ms-3 fs-5">ดร. สมชาย อินทรักษ์</div>
-                    
+
                         <h3 class="text-center mb-0 mt-3">ประวัติผู้สอน</h3>
                         <div class="ms-3 fs-5">
                             ดร. สมชาย อินทรักษ์ เป็นผู้เชี่ยวชาญด้านเทคโนโลยีสารสนเทศ มีประสบการณ์การสอนในมหาวิทยาลัยชั้นนำมากกว่า 15 ปี และมีผลงานวิจัยตีพิมพ์ในวารสารระดับนานาชาติหลายฉบับ
                         </div>
-                    
+
                         <h3 class="text-center mb-0 mt-3">ประสบการณ์ทำงาน</h3>
                         <div class="ms-3 fs-5">
                             - อาจารย์ประจำภาควิชาวิทยาการคอมพิวเตอร์ มหาวิทยาลัยเชียงใหม่ (2553 - ปัจจุบัน)<br>
                             - ที่ปรึกษาด้านระบบฐานข้อมูลให้กับบริษัทซอฟต์แวร์เอกชน (2558 - 2564)
                         </div>
-                    
+
                         <h3 class="text-center mb-0 mt-3">การศึกษา</h3>
                         <div class="ms-3 fs-5">
                             - ปริญญาเอก: ด้านวิศวกรรมคอมพิวเตอร์ มหาวิทยาลัยโตเกียว ประเทศญี่ปุ่น<br>
@@ -79,7 +79,7 @@
                             - ปริญญาตรี: วิทยาการคอมพิวเตอร์ มหาวิทยาลัยเกษตรศาสตร์<br>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>

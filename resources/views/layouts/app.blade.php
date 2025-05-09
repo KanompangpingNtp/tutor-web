@@ -186,7 +186,7 @@
                             <a class="btn-register" href="">สมัครสมาชิก</a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn-login" href="">เข้าสู่ระบบ</a>
+                            <a class="btn-login" href="{{route('LoginPage')}}">เข้าสู่ระบบ</a>
                         </li>
                     @endguest
                     @auth

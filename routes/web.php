@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\users\HomeController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\auth\AuthController;
 use App\Http\Controllers\admin\tutor_information\TutorInformationController;
@@ -14,6 +15,10 @@ use App\Http\Controllers\tutor\teacher_information\TeacherInformationController;
 use App\Http\Controllers\tutor\subject\SubjectTutorController;
 use App\Http\Controllers\tutor\courses_offered\TutorCoursesOfferedController;
 
+use App\Http\Controllers\users\subject_category\SubjectCategoryController;
+use App\Http\Controllers\users\course\CourseController;
+use App\Http\Controllers\users\teacher_history\TeacherHistoryController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,12 +30,21 @@ use App\Http\Controllers\tutor\courses_offered\TutorCoursesOfferedController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('auth.login');
-// });
+Route::get('/test', function () {
+    return view('pages.payment');
+});
+
+
+Route::get('/', [HomeController::class, 'Home'])->name('Home');
+
+Route::get('/subject_category/page', [HomeController::class, 'SubjectCategory'])->name('SubjectCategory');
+
+Route::get('/subject_category/course/page/{id}', [HomeController::class, 'CoursePage'])->name('CoursePage');
+
+Route::get('/subject_category/course/teacher_history/{id}', [HomeController::class, 'TeacherHistoryPage'])->name('TeacherHistoryPage');
 
 //auth
-Route::get('/', [AuthController::class, 'LoginPage'])->name('LoginPage');
+Route::get('/LoginPage', [AuthController::class, 'LoginPage'])->name('LoginPage');
 Route::post('/login', [AuthController::class, 'Login'])->name('Login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
