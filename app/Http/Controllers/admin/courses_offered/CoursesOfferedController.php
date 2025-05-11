@@ -28,7 +28,7 @@ class CoursesOfferedController extends Controller
             'tutor_id' => 'required|exists:users,id',
             'course_name' => 'required|string',
             'course_details' => 'required|string',
-            'course_duration_hour' => 'required|numeric',
+            'course_duration_hour' => 'required|string',
             'course_files_title' => 'file|mimes:jpg,jpeg,png|max:21200',
             'course_files' => 'nullable|array',
             'course_files.*' => 'file|mimes:jpg,jpeg,png,mp4,webm|max:51200',
@@ -125,16 +125,28 @@ class CoursesOfferedController extends Controller
             'course_duration_hour' => $request->course_duration_hour,
         ]);
 
-        // ลบตารางเวลาเก่า แล้วเพิ่มใหม่
-        $course->teachings()->delete();
+        $submittedTeachingIds = collect($request->teaching_id)->filter()->all();
+        CourseTeaching::where('course_id', $course->id)
+            ->whereNotIn('id', $submittedTeachingIds)
+            ->delete();
+
         foreach ($request->course_starttime as $i => $course_starttime) {
-            CourseTeaching::create([
-                'course_id' => $course->id,
-                // 'course_day' => $day,
-                'course_starttime' => $course_starttime,
-                'course_endtime' => $request->course_endtime[$i],
-                'hourly_rate' => $request->hourly_rate[$i],
-            ]);
+            $teachingId = $request->teaching_id[$i] ?? null;
+
+            if ($teachingId) {
+                CourseTeaching::where('id', $teachingId)->update([
+                    'course_starttime' => $course_starttime,
+                    'course_endtime' => $request->course_endtime[$i],
+                    'hourly_rate' => $request->hourly_rate[$i],
+                ]);
+            } else {
+                CourseTeaching::create([
+                    'course_id' => $course->id,
+                    'course_starttime' => $course_starttime,
+                    'course_endtime' => $request->course_endtime[$i],
+                    'hourly_rate' => $request->hourly_rate[$i],
+                ]);
+            }
         }
 
         if ($request->hasFile('course_files_title')) {

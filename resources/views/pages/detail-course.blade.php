@@ -141,11 +141,21 @@
                         @endif
                     </div>
 
-                    @auth
+                    {{-- @auth
                     <a href="{{ route('BookingPage', $courses->id) }}" class="btn-detail w-100">
-                        จอง
+                    จอง
                     </a>
-                    @endauth
+                    @endauth --}}
+                    <div class="d-flex gap-2 justify-content-center">
+                        <a href="{{route('TeacherHistoryPage',$courses->id)}}" class="btn-detail" style="width: 200px;">
+                            ประวัติผู้สอน
+                        </a>
+                        @auth
+                        <a href="{{ route('BookingPage', $courses->id) }}" class="btn-detail" style="width: 200px;">
+                            จองคอร์ส
+                        </a>
+                        @endauth
+                    </div>
                 </div>
             </div>
         </div>

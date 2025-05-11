@@ -207,7 +207,8 @@
                             <img src="{{ asset('navbar/user-unknow.png') }}" alt="avatar" class="rounded-circle me-2 bg-white profile-shadow" style="width: 5rem;">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{route('UsersAccount')}}">โปรไฟล์ของฉัน</a></li>
+                            <li><a class="dropdown-item" href="#">โปรไฟล์</a></li>
+                            <li><a class="dropdown-item" href="{{route('UsersAccount')}}">ประวัติการจองคอร์ส</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>

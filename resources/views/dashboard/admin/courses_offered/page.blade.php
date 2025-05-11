@@ -69,8 +69,8 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label class="form-label">จำนวนชั่วโมงการสอน</label>
-                                        <input type="number" name="course_duration_hour" class="form-control" required>
+                                        <label class="form-label">ระยะเวลาคอร์ส</label>
+                                        <input type="text" name="course_duration_hour" class="form-control" required>
                                     </div>
 
                                     <button type="button" class="btn btn-secondary btn-sm mb-3" id="add-schedule">+ เพิ่มเวลาเรียน</button>
@@ -252,8 +252,8 @@
 
                                     <!-- ชั่วโมงการสอน -->
                                     <div class="mb-3">
-                                        <label class="form-label">จำนวนชั่วโมงการสอน</label>
-                                        <input type="number" name="course_duration_hour" class="form-control" value="{{ old('course_duration_hour', $course->course_duration_hour) }}" required>
+                                        <label class="form-label">ระยะเวลาคอร์ส</label>
+                                        <input type="text" name="course_duration_hour" class="form-control" value="{{ old('course_duration_hour', $course->course_duration_hour) }}" required>
                                     </div>
 
                                     <!-- ปุ่มเพิ่ม -->
@@ -263,10 +263,9 @@
                                     <div id="teaching-schedule-container">
                                         @foreach($course->teachings as $teaching)
                                         <div class="teaching-schedule-set border p-3 mb-3 rounded">
-                                            {{-- <div class="mb-3">
-                                                <label class="form-label">วันที่สอน</label>
-                                                <input type="date" name="course_day[]" class="form-control" value="{{ $teaching->course_day }}" required>
-                                            </div> --}}
+
+                                            <!-- เพิ่มตรงนี้ -->
+                                            <input type="hidden" name="teaching_id[]" value="{{ $teaching->id }}">
 
                                             <div class="row">
                                                 <div class="mb-3 col-md-6">
@@ -292,11 +291,6 @@
                                     <!-- Template ซ่อนไว้ สำหรับ clone -->
                                     <template id="schedule-template">
                                         <div class="teaching-schedule-set border p-3 mb-3 rounded">
-                                            {{-- <div class="mb-3">
-                                                <label class="form-label">วันที่สอน</label>
-                                                <input type="date" name="course_day[]" class="form-control" required>
-                                            </div> --}}
-
                                             <div class="row">
                                                 <div class="mb-3 col-md-6">
                                                     <label class="form-label">เวลาเริ่มสอน</label>
@@ -361,11 +355,13 @@
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="courseDetailsModalLabel{{ $course->id }}">รายละเอียดคอร์ส</h5>
+                                <h5 class="modal-title" id="courseDetailsModalLabel{{ $course->id }}">ข้อมูลคอร์สเพิ่มเติม</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <!-- แสดงรายละเอียดทั้งหมด -->
+                                <h4>ระยะเวลาคอร์ส</h4>
+                                <p>{{$course->course_duration_hour}}</p><br>
+                                <h4>รายละเอียดคอร์ส</h4>
                                 <p>{!! $course->course_details !!}</p>
                             </div>
                             <div class="modal-footer">
@@ -393,8 +389,8 @@
                                         <tr>
                                             <th>เวลาเริ่ม</th>
                                             <th>เวลาสิ้นสุด</th>
-                                            <th>ค่าจ้าง/ชม. (บาท)</th>
                                             <th>รวมระยะเวลา (ชม.)</th>
+                                            <th>ค่าจ้าง/ชม. (บาท)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -402,7 +398,6 @@
                                         <tr>
                                             <td>{{ \Carbon\Carbon::parse($teaching->course_starttime)->format('H:i') }}</td>
                                             <td>{{ \Carbon\Carbon::parse($teaching->course_endtime)->format('H:i') }}</td>
-                                            <td>{{ number_format($teaching->hourly_rate, 2) }}</td>
                                             <td>
                                                 @php
                                                 $start = \Carbon\Carbon::parse($teaching->course_starttime);
@@ -412,6 +407,7 @@
 
                                                 {{ $totalHours }} ชม.
                                             </td>
+                                            <td>{{ number_format($teaching->hourly_rate, 2) }}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -483,21 +479,21 @@
 </script>
 
 <script>
-document.addEventListener('click', function (e) {
-    if (e.target.classList.contains('add-schedule-update')) {
-        const modalBody = e.target.closest('.modal-body');
-        const template = modalBody.querySelector('#schedule-template');
-        const clone = template.content.cloneNode(true);
-        modalBody.querySelector('#teaching-schedule-container').appendChild(clone);
-    }
-
-    if (e.target.classList.contains('remove-schedule')) {
-        const scheduleSets = e.target.closest('.modal-body').querySelectorAll('.teaching-schedule-set');
-        if (scheduleSets.length > 1) {
-            e.target.closest('.teaching-schedule-set').remove();
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('add-schedule-update')) {
+            const modalBody = e.target.closest('.modal-body');
+            const template = modalBody.querySelector('#schedule-template');
+            const clone = template.content.cloneNode(true);
+            modalBody.querySelector('#teaching-schedule-container').appendChild(clone);
         }
-    }
-});
+
+        if (e.target.classList.contains('remove-schedule')) {
+            const scheduleSets = e.target.closest('.modal-body').querySelectorAll('.teaching-schedule-set');
+            if (scheduleSets.length > 1) {
+                e.target.closest('.teaching-schedule-set').remove();
+            }
+        }
+    });
 
 </script>
 

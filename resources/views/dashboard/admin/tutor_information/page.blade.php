@@ -8,9 +8,9 @@
             <div class="card-body">
                 <h3 class="fw-bold py-3 mb-4 text-center">จัดการข้อมูลบุคคล</h3><br>
 
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     เพิ่มติวเตอร์
-                </button>
+                </button> --}}
 
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -60,7 +60,11 @@
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center">
-                                    <a href="{{route('TutorInformationDetailPage',$user->id)}}" class="btn btn-primary btn-sm me-2"><i class='bx bxs-user-detail'></i></a>
+                                    @if($user->level == 1 || $user->level == 2)
+                                    <a href="{{ route('TutorInformationDetailPage', $user->id) }}" class="btn btn-primary btn-sm me-2">
+                                        <i class='bx bxs-user-detail'></i>
+                                    </a>
+                                    @endif
 
                                     <button type="button" class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editModal{{ $user->id }}">
                                         <i class='bx bx-edit'></i>

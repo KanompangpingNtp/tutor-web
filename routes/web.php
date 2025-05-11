@@ -16,6 +16,7 @@ use App\Http\Controllers\tutor\teacher_information\TeacherInformationController;
 use App\Http\Controllers\tutor\subject\SubjectTutorController;
 use App\Http\Controllers\tutor\courses_offered\TutorCoursesOfferedController;
 use App\Http\Controllers\tutor\teaching_schedule\TeachingScheduleController;
+use App\Http\Controllers\tutor\teaching_history\TeachingHistoryController;
 
 use App\Http\Controllers\users\subject_category\SubjectCategoryController;
 use App\Http\Controllers\users\course\CourseController;
@@ -61,6 +62,8 @@ Route::middleware(['auth', 'check.level:1'])->group(function () {
     Route::get('/admin/tutor_information', [TutorInformationController::class, 'TutorInformationPage'])->name('TutorInformationPage');
     Route::put('/admin/tutor_information/update/{id}', [TutorInformationController::class, 'updateTutorInformation'])->name('updateTutorInformation');
     Route::get('/admin/tutor_information/detail/{id}', [TutorInformationController::class, 'TutorInformationDetailPage'])->name('TutorInformationDetailPage');
+    Route::post('/admin/teacher_information/create/detail', [TutorInformationController::class, 'AdminTeacherResumeCreate'])->name('AdminTeacherResumeCreate');
+    Route::put('/admin/teacher_information/profile/update/{id}', [TutorInformationController::class, 'AdminTutorUpdateDetails'])->name('AdminTutorUpdateDetails');
 
     Route::get('/admin/subject', [SubjectController::class, 'SubjectPage'])->name('SubjectPage');
     Route::post('/admin/subject/create', [SubjectController::class, 'SubjectCreate'])->name('SubjectCreate');
@@ -88,8 +91,8 @@ Route::middleware(['auth', 'check.level:2'])->group(function () {
     Route::get('/tutor/page', [TutorController::class, 'TutorIndex'])->name('TutorIndex');
 
     Route::get('/tutor/teacher_information', [TeacherInformationController::class, 'TeacherInformationPage'])->name('TeacherInformationPage');
-    Route::post('/tutor/teacher_information/create', [TeacherInformationController::class, 'TeacherPerformanceCreate'])->name('TeacherPerformanceCreate');
-    Route::delete('/tutor/teacher_information/delete/{id}', [TeacherInformationController::class, 'TeacherPerformanceDelete'])->name('TeacherPerformanceDelete');
+    Route::post('/tutor/teacher_information/create', [TeacherInformationController::class, 'TutorTeacherResumeCreate'])->name('TutorTeacherResumeCreate');
+    Route::put('/tutor/teacher_information/profile/update/{id}', [TeacherInformationController::class, 'TeacherInformationUpdate'])->name('TeacherInformationUpdate');
 
     Route::get('/tutor/subject_users', [SubjectTutorController::class, 'SubjectTutorPage'])->name('SubjectTutorPage');
     Route::post('/tutor/subject_users/create', [SubjectTutorController::class, 'SubjectTutorCreate'])->name('SubjectTutorCreate');
@@ -99,9 +102,13 @@ Route::middleware(['auth', 'check.level:2'])->group(function () {
     Route::get('/tutor/courses_offered', [TutorCoursesOfferedController::class, 'TutorCoursesOfferedPage'])->name('TutorCoursesOfferedPage');
     Route::post('/tutor/courses_offered/create', [TutorCoursesOfferedController::class, 'TutorCoursesOfferedCreate'])->name('TutorCoursesOfferedCreate');
     Route::delete('/tutor/courses_offered/delete/{id}', [TutorCoursesOfferedController::class, 'TutordeleteCourse'])->name('TutordeleteCourse');
-    Route::put('/tutor/courses_offered/update/{id}', [TutorCoursesOfferedController::class, 'TutorupdateCourse'])->name('TutorupdateCourse');
+    Route::put('/tutor/courses_offered/update/{id}', [TutorCoursesOfferedController::class, 'TutorCoursesOfferedUpdate'])->name('TutorCoursesOfferedUpdate');
 
     Route::get('/tutor/teaching_schedule', [TeachingScheduleController::class, 'TeachingSchedulePage'])->name('TeachingSchedulePage');
+    Route::get('/tutor/teaching_schedule/details/{id}', [TeachingScheduleController::class, 'TeachingScheduleDetails'])->name('TeachingScheduleDetails');
+    Route::put('/tutor/teaching_schedule/update-status/{id}', [TeachingScheduleController::class, 'TeachingScheduleUpdateStatus'])->name('TeachingScheduleUpdateStatus');
+
+    Route::get('/tutor/teaching_history', [TeachingHistoryController::class, 'TutorTeachingHistory'])->name('TutorTeachingHistory');
 });
 
 Route::middleware(['auth', 'check.level:3'])->group(function () {

@@ -51,15 +51,19 @@
                                 <span class="badge bg-danger">ยังไม่ชำระ</span>
                                 @endif
                             </td>
-                            <td class="text-center">{{ $item->note ?? '-' }}</td>
+                            <td class="text-center">
+                                <span class="note-preview" data-note="{{ $item->note ?? '-' }}">
+                                    {{ Str::limit($item->note ?? '-', 20) }}
+                                </span>
+                            </td>
                             <td class="d-flex justify-content-center">
-                                 @if($item->status === '1')
+                                @if($item->status === '1')
                                 <form action="{{ route('BookingHistoryUpdateStatus', $item->id) }}" method="POST">
                                     @csrf
                                     @method('PUT')
                                     <button type="submit" class="btn btn-primary btn-sm me-1">ยืนยัน</button>
                                 </form>
-                                 @endif
+                                @endif
 
                                 <form action="{{ route('AdminBookingHistoryDelete', $item->id) }}" method="POST" onsubmit="return confirm('คุณแน่ใจว่าต้องการลบหรือไม่?')">
                                     @csrf
@@ -73,6 +77,43 @@
                         @endforeach
                     </tbody>
                 </table>
+
+                <!-- Modal Structure -->
+                <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="noteModalLabel">รายละเอียดเพิ่มเติม</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p id="fullNoteText">ข้อมูลทั้งหมดจะปรากฏที่นี่...</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    // เมื่อคลิกที่ข้อความ note
+                    document.addEventListener('click', function(e) {
+                        if (e.target.classList.contains('note-preview')) {
+                            // ดึงข้อมูลทั้งหมดจาก data-note
+                            const fullNote = e.target.getAttribute('data-note');
+
+                            // ตั้งค่าข้อความใน modal
+                            document.getElementById('fullNoteText').textContent = fullNote;
+
+                            // สร้าง instance ของ modal และเปิดมัน
+                            var myModal = new bootstrap.Modal(document.getElementById('noteModal'));
+                            myModal.show();
+                        }
+                    });
+
+                </script>
+
 
                 @foreach ($booking as $item)
                 <div class="modal fade" id="paymentStatusModal{{ $item->id }}" tabindex="-1" aria-labelledby="paymentStatusModalLabel{{ $item->id }}" aria-hidden="true">

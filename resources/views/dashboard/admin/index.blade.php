@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Card หรือ widget อื่น ๆ -->
-<div class="row">
+{{-- <div class="row">
     <!-- ตัวอย่าง Card -->
     <div class="">
         <div class="card">
@@ -13,5 +13,5 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 @endsection

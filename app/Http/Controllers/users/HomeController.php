@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Subject;
 use App\Models\Course;
+use App\Models\TeacherResumes;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -35,13 +37,15 @@ class HomeController extends Controller
 
     public function CourseDetail($id)
     {
-        $courses = Course::with('user','teachings')->find($id);
+        $courses = Course::with('user', 'teachings')->find($id);
 
         return view('pages.detail-course', compact('courses'));
     }
 
-    public function TeacherHistoryPage()
+    public function TeacherHistoryPage($id)
     {
-        return view('pages.teacher-history');
+        $teacherResume = TeacherResumes::with('user')->where('user_id', $id)->first();
+
+        return view('pages.teacher-history', compact('teacherResume'));
     }
 }

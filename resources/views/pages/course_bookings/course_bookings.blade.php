@@ -62,6 +62,7 @@
 <body>
     <div class="bg-home d-flex align-items-start justify-content-center">
         <div class="container py-5 col-md-6">
+            <h1 class="mb-4 text-center">รายละเอียดการจองคอร์ส <br> <h2 class="text-center">วิชา {{$courses->course_name}}</h2> </h1> <br><br>
             <form action="{{route('BookingCreate')}}" method="POST" enctype="multipart/form-data">
                 @csrf
 
@@ -78,31 +79,48 @@
                         <select id="scheduled_datetime" name="scheduled_datetime" class="form-control" required>
                             <option value="">กรุณาเลือกช่วงเวลาที่ต้องการเรียน</option>
                             @foreach ($courses->teachings as $teaching)
-                            <option value="{{ $teaching->id }}">
-                                {{ \Carbon\Carbon::parse($teaching->course_starttime)->format('H:i') }} -
-                                {{ \Carbon\Carbon::parse($teaching->course_endtime)->format('H:i') }}
+                            @php
+                            $start = \Carbon\Carbon::parse($teaching->course_starttime);
+                            $end = \Carbon\Carbon::parse($teaching->course_endtime);
+                            $duration = $end->diffInHours($start);
+                            @endphp
+
+                            {{-- <option value="{{ $teaching->id }}">
+                            {{ $start->format('H:i') }} - {{ $end->format('H:i') }} ({{ $duration }} ชม.)
+                            </option> --}}
+                            <option value="{{ $teaching->id }}" data-hourly-rate="{{ $teaching->hourly_rate }}">
+                                {{ $start->format('H:i') }} - {{ $end->format('H:i') }} ({{ $duration }} ชม.)
                             </option>
+
                             @endforeach
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group mb-3">
-                    <label for="note">หมายเหตุ (ถ้ามี)</label>
-                    <textarea id="note" name="note" class="form-control" rows="3"></textarea>
-                </div>
-
-                <div class="form-group mb-3">
                     <label for="payment_status">ประเภทการชำระเงิน</label>
                     <select id="payment_status" name="payment_status" class="form-control">
                         <option value="pending">ชำระเงินจ่ายก่อนเรียน</option>
+
+                        @if(auth()->check() && auth()->user()->level == 1)
                         <option value="confirmed">ชำระเงินจ่ายหลังเรียน</option>
+                        @endif
                     </select>
+                </div>
+
+                <div class="mb-3">
+                    <p>บัญชี : 123-4567-89-0 ธนาคารไทยกรุง</p>
+                    <p>ราคาคอร์ส : <span id="hourlyRateDisplay">-</span> บาท</p>
                 </div>
 
                 <div class="form-group mb-3">
                     <label for="transfer_slip">แนบใบโอนเงิน</label>
                     <input type="file" id="transfer_slip" name="transfer_slip" class="form-control" required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="note">หมายเหตุ (ถ้ามี)</label>
+                    <textarea id="note" name="note" class="form-control" rows="3"></textarea>
                 </div>
 
                 <div class="d-flex justify-content-center align-items-center">
@@ -150,6 +168,19 @@
 
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const select = document.getElementById('scheduled_datetime');
+            const rateDisplay = document.getElementById('hourlyRateDisplay');
+
+            select.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const rate = selectedOption.getAttribute('data-hourly-rate');
+                rateDisplay.textContent = rate ? rate : '-';
+            });
+        });
+
+    </script>
 
 </body>
 @endsection

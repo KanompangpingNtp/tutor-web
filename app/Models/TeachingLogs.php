@@ -5,20 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CourseBooking extends Model
+class TeachingLogs extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
+      protected $fillable = [
         'course_id',
         'user_id',
-        'booking_date',
-        'scheduled_datetime',
-        'status',
-        'note',
-        'payment_status',
-        'transfer_slip',
-        'tutor_status'
+        'log_date_time',
     ];
 
     public function course()
@@ -29,10 +23,5 @@ class CourseBooking extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function teachings()
-    {
-        return $this->belongsTo(CourseTeaching::class, 'scheduled_datetime');
     }
 }

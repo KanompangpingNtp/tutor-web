@@ -11,8 +11,8 @@ class IncomeSummaryController extends Controller
 {
     public function IncomeSummaryPage(Request $request)
     {
-        $month = $request->month;
-        $year = $request->year;
+        $month = $request->month ?? now()->month;
+        $year = $request->year ?? now()->year;
 
         $availableMonths = CourseBooking::selectRaw('MONTH(booking_date) as month')
             ->distinct()
@@ -30,26 +30,42 @@ class IncomeSummaryController extends Controller
 
         foreach ($tutors as $tutor) {
             $income = 0;
+            $totalHours = 0;
 
             foreach ($tutor->courses as $course) {
                 foreach ($course->teachings as $teaching) {
                     $filteredBookings = $teaching->bookings->filter(function ($booking) use ($month, $year) {
                         $date = \Carbon\Carbon::parse($booking->booking_date);
-                        return (!$month || $date->month == $month) && (!$year || $date->year == $year);
+                        return (
+                            (!$month || $date->month == $month) &&
+                            (!$year || $date->year == $year) &&
+                            $booking->tutor_status == 1
+                        );
                     });
 
                     $bookingsCount = $filteredBookings->count();
 
-                    $durationHours = \Carbon\Carbon::parse($teaching->course_starttime)
-                        ->diffInMinutes(\Carbon\Carbon::parse($teaching->course_endtime)) / 60;
+                    if ($bookingsCount > 0) {
+                        $durationHours = \Carbon\Carbon::parse($teaching->course_starttime)
+                            ->diffInMinutes(\Carbon\Carbon::parse($teaching->course_endtime)) / 60;
 
-                    $income += $bookingsCount * $teaching->hourly_rate * $durationHours;
+                        $income += $bookingsCount * $teaching->hourly_rate;
+
+                        $totalHours += $bookingsCount * $durationHours;
+                    }
                 }
             }
 
             $tutor->total_income = number_format($income, 2);
+            $tutor->total_teaching_hours = number_format($totalHours, 2);
         }
 
-        return view('dashboard.admin.income_summary.page', compact('tutors', 'availableMonths', 'availableYears'));
+        return view('dashboard.admin.income_summary.page', compact(
+            'tutors',
+            'availableMonths',
+            'availableYears',
+            'month',
+            'year'
+        ));
     }
 }
