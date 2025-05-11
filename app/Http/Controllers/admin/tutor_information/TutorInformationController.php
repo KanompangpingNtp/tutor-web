@@ -36,14 +36,63 @@ class TutorInformationController extends Controller
 
     public function TutorInformationDetailPage($id)
     {
-        $users = User::find($id);
-        $teacherResume = TeacherResumes::where('user_id', $id)->first();
+        $user = User::with('teacherResume')->findOrFail($id);
 
-        return view('dashboard.admin.tutor_information.tutor_information_detail.page', compact('users', 'teacherResume'));
+        return view('dashboard.admin.tutor_information.tutor_information_detail.page', [
+            'users' => $user,
+            'teacherResume' => $user->teacherResume, // ส่งข้อมูล teacherResume ไปยัง view
+        ]);
     }
 
-    public function AdminTeacherResumeCreate(Request $request)
+
+
+    // public function AdminTeacherResumeCreate(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'awards' => 'nullable|array',
+    //         'certificates' => 'nullable|array',
+    //         'educations' => 'nullable|array',
+    //         'teachings' => 'nullable|array',
+    //         'teaching_success' => 'nullable|string',
+    //     ]);
+
+    //     // ตรวจสอบว่า TeacherResume สำหรับ user_id นี้มีข้อมูลหรือไม่
+    //     $teacherResume = TeacherResumes::where('user_id', $id)->first();
+
+    //     $awards = array_filter($request->awards);
+    //     $certificates = array_filter($request->certificates);
+    //     $educations = array_filter(array_map(null, $request->education_level, $request->institution, $request->year));
+    //     $teachings = array_filter(array_map(null, $request->teaching_place, $request->subject, $request->teaching_duration));
+
+    //     if ($teacherResume) {
+    //         // ถ้ามีข้อมูลแล้ว ให้ทำการอัปเดตข้อมูล
+    //         $teacherResume->update([
+    //             'awards' => json_encode($awards),
+    //             'certificates' => json_encode($certificates),
+    //             'educations' => json_encode($educations),
+    //             'teachings' => json_encode($teachings),
+    //             'teaching_success' => $request->teaching_success,
+    //         ]);
+    //     } else {
+    //         // ถ้าไม่มีข้อมูล ให้ทำการบันทึกข้อมูลใหม่
+    //         TeacherResumes::create([
+    //             'user_id' => Auth::id(),
+    //             'awards' => json_encode($awards),
+    //             'certificates' => json_encode($certificates),
+    //             'educations' => json_encode($educations),
+    //             'teachings' => json_encode($teachings),
+    //             'teaching_success' => $request->teaching_success,
+    //         ]);
+    //     }
+
+    //     return redirect()->back()->with('success', 'บันทึกข้อมูลสำเร็จ');
+    // }
+    public function AdminTeacherResumeCreate(Request $request, $id)
     {
+        // ตรวจสอบว่า user ที่เกี่ยวข้องมีอยู่จริง
+        $user = User::findOrFail($id);
+
+        // Validate ข้อมูลจากฟอร์ม
         $request->validate([
             'awards' => 'nullable|array',
             'certificates' => 'nullable|array',
@@ -53,7 +102,7 @@ class TutorInformationController extends Controller
         ]);
 
         // ตรวจสอบว่า TeacherResume สำหรับ user_id นี้มีข้อมูลหรือไม่
-        $teacherResume = TeacherResumes::where('user_id', Auth::id())->first();
+        $teacherResume = TeacherResumes::where('user_id', $id)->first();
 
         $awards = array_filter($request->awards);
         $certificates = array_filter($request->certificates);
@@ -72,7 +121,7 @@ class TutorInformationController extends Controller
         } else {
             // ถ้าไม่มีข้อมูล ให้ทำการบันทึกข้อมูลใหม่
             TeacherResumes::create([
-                'user_id' => Auth::id(),
+                'user_id' => $user->id, // ใช้ user_id ที่ส่งมา
                 'awards' => json_encode($awards),
                 'certificates' => json_encode($certificates),
                 'educations' => json_encode($educations),

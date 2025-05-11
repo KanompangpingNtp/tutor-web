@@ -62,7 +62,7 @@ Route::middleware(['auth', 'check.level:1'])->group(function () {
     Route::get('/admin/tutor_information', [TutorInformationController::class, 'TutorInformationPage'])->name('TutorInformationPage');
     Route::put('/admin/tutor_information/update/{id}', [TutorInformationController::class, 'updateTutorInformation'])->name('updateTutorInformation');
     Route::get('/admin/tutor_information/detail/{id}', [TutorInformationController::class, 'TutorInformationDetailPage'])->name('TutorInformationDetailPage');
-    Route::post('/admin/teacher_information/create/detail', [TutorInformationController::class, 'AdminTeacherResumeCreate'])->name('AdminTeacherResumeCreate');
+    Route::post('/admin/teacher_information/create/detail/{id}', [TutorInformationController::class, 'AdminTeacherResumeCreate'])->name('AdminTeacherResumeCreate');
     Route::put('/admin/teacher_information/profile/update/{id}', [TutorInformationController::class, 'AdminTutorUpdateDetails'])->name('AdminTutorUpdateDetails');
 
     Route::get('/admin/subject', [SubjectController::class, 'SubjectPage'])->name('SubjectPage');

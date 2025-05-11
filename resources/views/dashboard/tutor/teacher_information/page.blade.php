@@ -259,83 +259,95 @@
         const maxAwards = 5;
         const addAwardsBtn = document.getElementById("add-awards-btn");
         const awardsGroup = document.getElementById("awards-group");
+        const awardsSet = awardsGroup.querySelector(".awards-set"); // เรียก .awards-set ที่มีอยู่ใน DOM
 
-        addAwardsBtn.addEventListener("click", function() {
-            const currentSets = awardsGroup.querySelectorAll(".awards-set").length;
+        if (awardsSet) {
+            addAwardsBtn.addEventListener("click", function() {
+                const currentSets = awardsGroup.querySelectorAll(".awards-set").length;
 
-            if (currentSets < maxAwards) {
-                const clone = awardsGroup.querySelector(".awards-set").cloneNode(true);
-                clone.querySelector("input").value = ""; // ล้างค่าชุดใหม่
-                awardsGroup.appendChild(clone);
-            } else {
-                alert("สามารถเพิ่มได้สูงสุด 5 ช่องเท่านั้น");
-            }
-        });
+                if (currentSets < maxAwards) {
+                    const clone = awardsSet.cloneNode(true);
+                    clone.querySelector("input").value = ""; // ล้างค่าชุดใหม่
+                    awardsGroup.appendChild(clone);
+                } else {
+                    alert("สามารถเพิ่มได้สูงสุด 5 ช่องเท่านั้น");
+                }
+            });
 
-        // ลบชุดที่ไม่มีข้อมูล
-        removeEmptySets(awardsGroup);
+            // ลบชุดที่ไม่มีข้อมูล
+            removeEmptySets(awardsGroup);
+        }
 
         // วุฒิบัตร / ใบรับรอง
         const maxCertificates = 5;
         const addCertificatesBtn = document.getElementById("add-certificates-btn");
         const certificatesGroup = document.getElementById("certificates-group");
+        const certificatesSet = certificatesGroup.querySelector(".certificates-set"); // เรียก .certificates-set ที่มีอยู่ใน DOM
 
-        addCertificatesBtn.addEventListener("click", function() {
-            const currentSets = certificatesGroup.querySelectorAll(".certificates-set").length;
+        if (certificatesSet) {
+            addCertificatesBtn.addEventListener("click", function() {
+                const currentSets = certificatesGroup.querySelectorAll(".certificates-set").length;
 
-            if (currentSets < maxCertificates) {
-                const clone = certificatesGroup.querySelector(".certificates-set").cloneNode(true);
-                clone.querySelector("input").value = ""; // ล้างค่าชุดใหม่
-                certificatesGroup.appendChild(clone);
-            } else {
-                alert("สามารถเพิ่มได้สูงสุด 5 ช่องเท่านั้น");
-            }
-        });
+                if (currentSets < maxCertificates) {
+                    const clone = certificatesSet.cloneNode(true);
+                    clone.querySelector("input").value = ""; // ล้างค่าชุดใหม่
+                    certificatesGroup.appendChild(clone);
+                } else {
+                    alert("สามารถเพิ่มได้สูงสุด 5 ช่องเท่านั้น");
+                }
+            });
 
-        // ลบชุดที่ไม่มีข้อมูล
-        removeEmptySets(certificatesGroup);
+            // ลบชุดที่ไม่มีข้อมูล
+            removeEmptySets(certificatesGroup);
+        }
 
         // การศึกษา
         const maxEducation = 5;
         const addEducationBtn = document.getElementById("add-education-btn");
         const educationGroup = document.getElementById("education-group");
+        const educationSet = educationGroup.querySelector(".education-set"); // เรียก .education-set ที่มีอยู่ใน DOM
 
-        addEducationBtn.addEventListener("click", function() {
-            const currentSets = educationGroup.querySelectorAll(".education-set").length;
+        if (educationSet) {
+            addEducationBtn.addEventListener("click", function() {
+                const currentSets = educationGroup.querySelectorAll(".education-set").length;
 
-            if (currentSets < maxEducation) {
-                const clone = educationGroup.querySelector(".education-set").cloneNode(true);
-                // ล้างค่าชุดใหม่
-                clone.querySelectorAll("input").forEach(input => input.value = "");
-                educationGroup.appendChild(clone);
-            } else {
-                alert("สามารถเพิ่มได้สูงสุด 5 ชุดเท่านั้น");
-            }
-        });
+                if (currentSets < maxEducation) {
+                    const clone = educationSet.cloneNode(true);
+                    // ล้างค่าชุดใหม่
+                    clone.querySelectorAll("input").forEach(input => input.value = "");
+                    educationGroup.appendChild(clone);
+                } else {
+                    alert("สามารถเพิ่มได้สูงสุด 5 ชุดเท่านั้น");
+                }
+            });
 
-        // ลบชุดที่ไม่มีข้อมูล
-        removeEmptySets(educationGroup);
+            // ลบชุดที่ไม่มีข้อมูล
+            removeEmptySets(educationGroup);
+        }
 
         // ประสบการณ์สอน
         const maxTeaching = 5;
         const addTeachingBtn = document.getElementById("add-teaching-btn");
         const teachingGroup = document.getElementById("teaching-group");
+        const teachingSet = teachingGroup.querySelector(".teaching-set"); // เรียก .teaching-set ที่มีอยู่ใน DOM
 
-        addTeachingBtn.addEventListener("click", function() {
-            const currentSets = teachingGroup.querySelectorAll(".teaching-set").length;
+        if (teachingSet) {
+            addTeachingBtn.addEventListener("click", function() {
+                const currentSets = teachingGroup.querySelectorAll(".teaching-set").length;
 
-            if (currentSets < maxTeaching) {
-                const clone = teachingGroup.querySelector(".teaching-set").cloneNode(true);
-                // ล้างค่าชุดใหม่
-                clone.querySelectorAll("input").forEach(input => input.value = "");
-                teachingGroup.appendChild(clone);
-            } else {
-                alert("สามารถเพิ่มได้สูงสุด 5 ชุดเท่านั้น");
-            }
-        });
+                if (currentSets < maxTeaching) {
+                    const clone = teachingSet.cloneNode(true);
+                    // ล้างค่าชุดใหม่
+                    clone.querySelectorAll("input").forEach(input => input.value = "");
+                    teachingGroup.appendChild(clone);
+                } else {
+                    alert("สามารถเพิ่มได้สูงสุด 5 ชุดเท่านั้น");
+                }
+            });
 
-        // ลบชุดที่ไม่มีข้อมูล
-        removeEmptySets(teachingGroup);
+            // ลบชุดที่ไม่มีข้อมูล
+            removeEmptySets(teachingGroup);
+        }
     });
 
 </script>

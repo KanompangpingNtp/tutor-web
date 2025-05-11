@@ -66,8 +66,8 @@ class User extends Authenticatable
         return $this->hasMany(TeachingLogs::class);
     }
 
-    public function teacherResumes()
+    public function teacherResume()
     {
-        return $this->hasMany(TeacherResumes::class);
+        return $this->hasOne(TeacherResumes::class);
     }
 }
