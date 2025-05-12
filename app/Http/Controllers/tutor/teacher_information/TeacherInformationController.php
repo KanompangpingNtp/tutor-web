@@ -63,10 +63,10 @@ class TeacherInformationController extends Controller
         // ตรวจสอบว่า TeacherResume สำหรับ user_id นี้มีข้อมูลหรือไม่
         $teacherResume = TeacherResumes::where('user_id', Auth::id())->first();
 
-        $awards = array_filter($request->awards);
-        $certificates = array_filter($request->certificates);
-        $educations = array_filter(array_map(null, $request->education_level, $request->institution, $request->year));
-        $teachings = array_filter(array_map(null, $request->teaching_place, $request->subject, $request->teaching_duration));
+        $awards = array_filter($request->awards ?? []);
+        $certificates = array_filter($request->certificates ?? []);
+        $educations = array_filter(array_map(null, $request->education_level ?? [], $request->institution ?? [], $request->year ?? []));
+        $teachings = array_filter(array_map(null, $request->teaching_place ?? [], $request->subject ?? [], $request->teaching_duration ?? []));
 
         if ($teacherResume) {
             // ถ้ามีข้อมูลแล้ว ให้ทำการอัปเดตข้อมูล

@@ -46,6 +46,8 @@ class HomeController extends Controller
     {
         $teacherResume = TeacherResumes::with('user')->where('user_id', $id)->first();
 
+        // dd($id, $teacherResume);
+
         return view('pages.teacher-history', compact('teacherResume'));
     }
 }

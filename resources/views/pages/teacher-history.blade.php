@@ -40,10 +40,10 @@
 
             <div class="row g-4 justify-content-center justify-content-xl-start align-items-start">
                 <div class="col-lg-4">
+                    @if ($teacherResume && $teacherResume->user)
                     <div class="card bg-white shadow rounded-4 text-center">
                         <div class="card-body d-flex flex-column align-items-center">
-                            <img src="{{ $teacherResume->user->profile_image ? asset('storage/' . $teacherResume->user->profile_image) : asset('teacher-history/รูปตัวอย่างคน.png') }}"
-                            alt="img-teacher" class="img-fluid img-teacher mb-3" style="max-height: 250px; width: 250px; object-fit: cover;">
+                            <img src="{{ $teacherResume->user->profile_image ? asset('storage/' . $teacherResume->user->profile_image) : asset('teacher-history/รูปตัวอย่างคน.png') }}" alt="img-teacher" class="img-fluid img-teacher mb-3" style="max-height: 250px; width: 250px; object-fit: cover;">
                             <div class="text-start w-100 px-3">
                                 <p><strong>ชื่อผู้สอน:</strong> {{ $teacherResume->user->name ?? '-' }}</p>
                                 <p><strong>อีเมล:</strong> {{ $teacherResume->user->email ?? '-' }}</p>
@@ -51,6 +51,9 @@
                             </div>
                         </div>
                     </div>
+                    @else
+                    <div class="alert alert-warning">ไม่พบข้อมูลประวัติผู้สอน</div>
+                    @endif
                 </div>
 
                 <div class="col-lg-8 d-flex flex-column justify-content-start align-items-start p-4 bg-white shadow rounded-4">

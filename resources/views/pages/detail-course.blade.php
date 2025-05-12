@@ -147,7 +147,7 @@
                     </a>
                     @endauth --}}
                     <div class="d-flex gap-2 justify-content-center">
-                        <a href="{{route('TeacherHistoryPage',$courses->id)}}" class="btn-detail" style="width: 200px;">
+                        <a href="{{route('TeacherHistoryPage',$courses->user_id)}}" class="btn-detail" style="width: 200px;">
                             ประวัติผู้สอน
                         </a>
                         @auth
