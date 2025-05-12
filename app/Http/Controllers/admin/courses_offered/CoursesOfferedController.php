@@ -9,6 +9,7 @@ use App\Models\Subject;
 use App\Models\Course;
 use App\Models\CourseFile;
 use App\Models\CourseTeaching;
+use Illuminate\Support\Facades\Storage;
 
 class CoursesOfferedController extends Controller
 {
@@ -146,6 +147,19 @@ class CoursesOfferedController extends Controller
                     'course_endtime' => $request->course_endtime[$i],
                     'hourly_rate' => $request->hourly_rate[$i],
                 ]);
+            }
+        }
+
+        if ($request->has('delete_files')) {
+            foreach ($request->delete_files as $fileId) {
+                $file = CourseFile::find($fileId);
+                if ($file) {
+                    // ลบจาก storage
+                    Storage::disk('public')->delete($file->file_path);
+
+                    // ลบจากฐานข้อมูล
+                    $file->delete();
+                }
             }
         }
 

@@ -70,7 +70,7 @@
                                         <i class='bx bx-edit'></i>
                                     </button>
 
-                                    <form action="#" method="POST" onsubmit="return confirm('คุณแน่ใจว่าต้องการลบวิชานี้?')">
+                                    <form action="{{route('deleteTutorInformation',$user->id)}}" method="POST" onsubmit="return confirm('คุณแน่ใจว่าต้องการลบวิชานี้?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">

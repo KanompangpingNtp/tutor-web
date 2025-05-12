@@ -34,6 +34,14 @@ class TutorInformationController extends Controller
         return redirect()->back()->with('success', 'อัปเดตข้อมูลเรียบร้อยแล้ว');
     }
 
+    public function deleteTutorInformation($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return redirect()->back()->with('success', 'ลบข้อมูลเรียบร้อยแล้ว');
+    }
+
     public function TutorInformationDetailPage($id)
     {
         $user = User::with('teacherResume')->findOrFail($id);
@@ -43,8 +51,6 @@ class TutorInformationController extends Controller
             'teacherResume' => $user->teacherResume, // ส่งข้อมูล teacherResume ไปยัง view
         ]);
     }
-
-
 
     // public function AdminTeacherResumeCreate(Request $request, $id)
     // {

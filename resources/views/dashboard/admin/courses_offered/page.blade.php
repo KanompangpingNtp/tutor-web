@@ -220,6 +220,11 @@
                                         </div>
                                     </div>
 
+                                    <div class="mb-3">
+                                        <label class="form-label">ภาพหน้าปกคอร์ส</label>
+                                        <input type="file" name="course_files_title" class="form-control" multiple>
+                                    </div>
+
                                     <!-- แสดงไฟล์หน้าปก (status = 1) -->
                                     @if ($course->files->where('status', 1)->count())
                                     <div class="mb-3">
@@ -234,6 +239,15 @@
                                         @endforeach
                                     </div>
                                     @endif
+
+                                    <div class="mb-3">
+                                        <label for="file_post" class="form-label">แนบไฟล์ภาพและวิดีโอ</label>
+                                        <input type="file" class="form-control" id="file_post" name="course_files[]" multiple>
+                                        <small class="text-muted">ประเภทไฟล์ที่รองรับ: jpg, jpeg, png</small>
+                                        <div id="file-list" class="mt-1">
+                                            <div class="d-flex flex-wrap gap-3"></div>
+                                        </div>
+                                    </div>
 
                                     <!-- แสดงไฟล์ภาพ/วิดีโอ (status = 2) -->
                                     @if ($course->files->where('status', 2)->count())
