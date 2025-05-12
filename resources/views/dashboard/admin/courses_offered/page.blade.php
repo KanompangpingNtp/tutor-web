@@ -216,7 +216,7 @@
                                     <!-- รายละเอียด -->
                                     <div class="mb-3">
                                         <div class="form-floating">
-                                            <textarea class="form-control" id="details_update" name="course_details">{{ old('course_details', $course->course_details) }}</textarea>
+                                            <textarea class="form-control" id="details_update" name="course_details">{{ $course->course_details }}</textarea>
                                         </div>
                                     </div>
 
@@ -452,20 +452,17 @@
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const editorIds = ["#details", "#details_update"];
-
-        editorIds.forEach(id => {
-            const element = document.querySelector(id);
-            if (element) {
-                ClassicEditor
-                    .create(element)
-                    .then(editor => {
-                        // Optional: เก็บ editor instance ไว้ใช้งานต่อได้ที่นี่
-                    })
-                    .catch(error => {
-                        console.error("CKEditor error for", id, ":", error);
-                    });
-            }
+        document.querySelectorAll("#details, #details_update").forEach(textarea => {
+            ClassicEditor
+                .create(textarea)
+                .then(editor => {
+                    const editable = editor.ui.view.editable.element;
+                    editable.style.resize = "none";
+                    editable.style.overflow = "auto";
+                })
+                .catch(error => {
+                    console.error("CKEditor error:", error);
+                });
         });
     });
 
