@@ -151,14 +151,67 @@
                             ประวัติผู้สอน
                         </a>
                         @auth
-                        <a href="{{ route('BookingPage', $courses->id) }}" class="btn-detail" style="width: 200px;">
+                        {{-- <a href="{{ route('BookingPage', $courses->id) }}" class="btn-detail" style="width: 200px;">
                             จองคอร์ส
+                        </a> --}}
+                        <a href="#" class="btn-detail" style="width: 200px;" data-bs-toggle="modal" data-bs-target="#bookingModal{{ $courses->id }}">
+                        จองคอร์ส
                         </a>
                         @endauth
                     </div>
                 </div>
             </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="bookingModal{{ $courses->id }}" tabindex="-1" aria-labelledby="bookingModalLabel{{ $courses->id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="bookingModalLabel{{ $courses->id }}">จองคอร์ส: {{ $courses->course_name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{route('BookingCreate',$courses->id)}}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-body" style="font-size: 15px;">
+                            <input type="hidden" name="course_id" value="{{ $courses->id }}">
+
+                            <div class="form-group mb-3">
+                                <label for="payment_status">ประเภทการชำระเงิน</label>
+                                <select id="payment_status" name="payment_status" class="form-control" required>
+                                    <option value="confirmed">ชำระเงินจ่ายก่อนเรียน</option>
+
+                                    @if(auth()->check() && auth()->user()->level == 1)
+                                    <option value="confirmed">ชำระเงินจ่ายหลังเรียน</option>
+                                    @endif
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <p><strong>บัญชี :</strong> 123-4567-89-0 ธนาคารไทยกรุง</p>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="transfer_slip">แนบใบโอนเงิน</label>
+                                <input type="file" id="transfer_slip" name="transfer_slip" class="form-control" required>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="note">หมายเหตุ (ถ้ามี)</label>
+                                <textarea id="note" name="note" class="form-control" rows="3"></textarea>
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">ยืนยันการจอง</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
+
+    </div>
     </div>
 
     <!-- Modal -->

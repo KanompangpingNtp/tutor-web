@@ -48,7 +48,9 @@
                                     ชำระแล้ว
                                 </button>
                                 @elseif($item->payment_status === 'confirmed')
-                                <span class="badge bg-danger">ยังไม่ชำระ</span>
+                                <span class="badge bg-danger" data-bs-toggle="modal" data-bs-target="#slipModal{{ $item->id }}" style="cursor:pointer;">
+                                    ยังไม่ชำระ
+                                </span>
                                 @endif
                             </td>
                             <td class="text-center">
@@ -57,6 +59,14 @@
                                 </span>
                             </td>
                             <td class="d-flex justify-content-center">
+                                @if($item->payment_status === 'confirmed')
+                                <form action="{{ route('BookingHistoryUpdatePayment', $item->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn btn-primary btn-sm me-1">ยืนยันการชำระเงิน</button>
+                                </form>
+                                @endif
+
                                 @if($item->status === '1')
                                 <form action="{{ route('BookingHistoryUpdateStatus', $item->id) }}" method="POST">
                                     @csrf
@@ -77,6 +87,25 @@
                         @endforeach
                     </tbody>
                 </table>
+
+                <!-- Modal แสดงสลิป -->
+                <div class="modal fade" id="slipModal{{ $item->id }}" tabindex="-1" aria-labelledby="slipModalLabel{{ $item->id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="slipModalLabel{{ $item->id }}">หลักฐานการโอนเงิน</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="ปิด"></button>
+                            </div>
+                            <div class="modal-body text-center">
+                                @if ($item->transfer_slip)
+                                <img src="{{ asset('storage/' . $item->transfer_slip) }}" class="img-fluid rounded" alt="ใบโอนเงิน">
+                                @else
+                                <p class="text-muted">ไม่มีใบโอนเงินที่แนบไว้</p>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Modal Structure -->
                 <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">

@@ -45,7 +45,6 @@ Route::get('/subject_category/page', [HomeController::class, 'SubjectCategory'])
 Route::get('/subject_category/course/page/{id}', [HomeController::class, 'CoursePage'])->name('CoursePage');
 Route::get('/subject_category/course/detail/page/{id}', [HomeController::class, 'CourseDetail'])->name('CourseDetail');
 Route::get('/course_bookings/{id}', [CourseController::class, 'BookingPage'])->name('BookingPage');
-Route::post('/course_bookings/create', [CourseController::class, 'BookingCreate'])->name('BookingCreate');
 
 Route::get('/subject_category/course/teacher_history/{id}', [HomeController::class, 'TeacherHistoryPage'])->name('TeacherHistoryPage');
 
@@ -85,6 +84,7 @@ Route::middleware(['auth', 'check.level:1'])->group(function () {
 
     Route::get('/admin/booking_history', [BookingHistoryController::class, 'AdminBookingHistoryPage'])->name('AdminBookingHistoryPage');
     Route::put('/admin/booking_history/update-status/{id}', [BookingHistoryController::class, 'BookingHistoryUpdateStatus'])->name('BookingHistoryUpdateStatus');
+    Route::put('/admin/booking_history/update-payment_status/{id}', [BookingHistoryController::class, 'BookingHistoryUpdatePayment'])->name('BookingHistoryUpdatePayment');
     Route::delete('/admin/booking_history/booking-history/{id}', [BookingHistoryController::class, 'AdminBookingHistoryDelete'])->name('AdminBookingHistoryDelete');
 });
 
@@ -114,4 +114,7 @@ Route::middleware(['auth', 'check.level:2'])->group(function () {
 
 Route::middleware(['auth', 'check.level:3'])->group(function () {
     Route::get('/users/account/detail', [UsersController::class, 'UsersAccount'])->name('UsersAccount');
+    Route::post('/course_bookings/create', [CourseController::class, 'BookingCreate'])->name('BookingCreate');
+    Route::post('/users/account/booking/schedule/{id}', [UsersController::class, 'schedule'])->name('booking.schedule');
+
 });

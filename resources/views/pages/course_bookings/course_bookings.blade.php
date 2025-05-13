@@ -82,14 +82,10 @@
                             @php
                             $start = \Carbon\Carbon::parse($teaching->course_starttime);
                             $end = \Carbon\Carbon::parse($teaching->course_endtime);
-                            $duration = $end->diffInHours($start);
                             @endphp
 
-                            {{-- <option value="{{ $teaching->id }}">
-                            {{ $start->format('H:i') }} - {{ $end->format('H:i') }} ({{ $duration }} ชม.)
-                            </option> --}}
                             <option value="{{ $teaching->id }}" data-hourly-rate="{{ $teaching->hourly_rate }}">
-                                {{ $start->format('H:i') }} - {{ $end->format('H:i') }} ({{ $duration }} ชม.)
+                                {{ $start->format('H:i') }} - {{ $end->format('H:i') }}
                             </option>
 
                             @endforeach
@@ -110,7 +106,7 @@
 
                 <div class="mb-3">
                     <p>บัญชี : 123-4567-89-0 ธนาคารไทยกรุง</p>
-                    <p>ราคาคอร์ส : <span id="hourlyRateDisplay">-</span> บาท</p>
+                    {{-- <p>ราคาคอร์ส : <span id="hourlyRateDisplay">-</span> บาท</p> --}}
                 </div>
 
                 <div class="form-group mb-3">

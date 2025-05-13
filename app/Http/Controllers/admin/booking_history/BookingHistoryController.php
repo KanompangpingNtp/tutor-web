@@ -34,4 +34,15 @@ class BookingHistoryController extends Controller
 
         return redirect()->back()->with('success', 'ลบข้อมูลเรียบร้อยแล้ว');
     }
+
+       public function BookingHistoryUpdatePayment($id)
+    {
+        $booking = CourseBooking::findOrFail($id);
+
+        $booking->payment_status = 'pending';
+
+        $booking->save();
+
+        return redirect()->back()->with('success', 'สถานะการชำระเงินอัปเดตแล้ว');
+    }
 }
