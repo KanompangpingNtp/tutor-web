@@ -88,7 +88,7 @@
                     </tbody>
                 </table>
 
-                <!-- Modal แสดงสลิป -->
+                @foreach ($booking as $item)
                 <div class="modal fade" id="slipModal{{ $item->id }}" tabindex="-1" aria-labelledby="slipModalLabel{{ $item->id }}" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -106,6 +106,7 @@
                         </div>
                     </div>
                 </div>
+                 @endforeach
 
                 <!-- Modal Structure -->
                 <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
