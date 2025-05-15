@@ -58,13 +58,14 @@
         text-overflow: ellipsis;
     }
 
+    
 </style>
 
 <body>
     <div class="bg-home d-flex align-items-start justify-content-center">
         <div class="container py-5 col-md-12">
             <h1 class="mb-4 text-center">ประวัติการจองคอร์ส</h1><br>
-
+            
             <table class="table table-striped" id="data_table">
                 <thead>
                     <tr>
@@ -129,6 +130,7 @@
             <div class="modal fade" id="bookingModal{{ $item->id }}" tabindex="-1" aria-labelledby="bookingModalLabel{{ $item->id }}" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
+                        
                         <form action="{{ route('booking.schedule', $item->id) }}" method="POST">
                             @csrf
                             <div class="modal-header">
