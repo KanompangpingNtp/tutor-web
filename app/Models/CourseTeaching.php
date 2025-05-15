@@ -14,6 +14,7 @@ class CourseTeaching extends Model
         'course_starttime',
         'course_endtime',
         'hourly_rate',
+        'course_day_id'
     ];
 
     public function course()
@@ -24,5 +25,10 @@ class CourseTeaching extends Model
     public function bookings()
     {
         return $this->hasMany(CourseBooking::class, 'scheduled_datetime', 'id');
+    }
+
+    public function day()
+    {
+        return $this->belongsTo(CourseDay::class, 'course_day_id');
     }
 }

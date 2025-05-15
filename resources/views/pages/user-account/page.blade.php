@@ -93,9 +93,10 @@
                         <td>{{ $item->note ?? '-' }}</td>
                         <td>
                             @if ($item->payment_status === 'pending' && $item->scheduled_datetime === null)
-                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#bookingModal{{ $item->id }}">
-                                จอง
-                            </button>
+                            {{-- <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#bookingModal{{ $item->id }}">
+                            จอง
+                            </button> --}}
+                            <a href="{{ route('UsersAccountBooking', $item->id) }}" class="btn btn-sm btn-primary">จอง</a>
                             @else
                             <span class="text-success">จองแล้ว</span>
                             @endif
@@ -203,7 +204,7 @@
 
     </script>
 
-<script src="{{asset('js/datatable.js')}}"></script>
+    <script src="{{asset('js/datatable.js')}}"></script>
 
 </body>
 

@@ -76,6 +76,8 @@ Route::middleware(['auth', 'check.level:1'])->group(function () {
     Route::post('/admin/subject_users/update/{id}', [SubjectUsersController::class, 'SubjectUsersUpdate'])->name('SubjectUsersUpdate');
 
     Route::get('/admin/courses_offered', [CoursesOfferedController::class, 'CoursesOfferedPage'])->name('CoursesOfferedPage');
+    Route::get('/admin/courses_offered/create/page', [CoursesOfferedController::class, 'CoursesOfferedCreatePage'])->name('CoursesOfferedCreatePage');
+    Route::get('/admin/courses-offered/update/page/{id}', [CoursesOfferedController::class, 'CoursesOfferedUpdatePage'])->name('CoursesOfferedUpdatePage');
     Route::post('/admin/courses_offered/create', [CoursesOfferedController::class, 'CoursesOfferedCreate'])->name('CoursesOfferedCreate');
     Route::delete('/admin/courses_offered/delete/{id}', [CoursesOfferedController::class, 'deleteCourse'])->name('deleteCourse');
     Route::put('/admin/courses_offered/update/{id}', [CoursesOfferedController::class, 'CoursesOfferedUpdate'])->name('CoursesOfferedUpdate');
@@ -116,5 +118,5 @@ Route::middleware(['auth', 'check.level:3'])->group(function () {
     Route::get('/users/account/detail', [UsersController::class, 'UsersAccount'])->name('UsersAccount');
     Route::post('/course_bookings/create', [CourseController::class, 'BookingCreate'])->name('BookingCreate');
     Route::post('/users/account/booking/schedule/{id}', [UsersController::class, 'schedule'])->name('booking.schedule');
-
+    Route::get('/user-account/booking/{id}', [UsersController::class, 'UsersAccountBooking'])->name('UsersAccountBooking');
 });

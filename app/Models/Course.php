@@ -40,4 +40,14 @@ class Course extends Model
     {
         return $this->hasMany(TeachingLogs::class);
     }
+
+    public function days()
+    {
+        return $this->hasMany(CourseDay::class);
+    }
+
+    public function amountTimes()
+    {
+        return $this->hasMany(CourseAmountTime::class);
+    }
 }

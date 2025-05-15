@@ -9,24 +9,14 @@ use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
-    // public function UsersAccount()
-    // {
-    //     $booking = CourseBooking::with(['course.teachings', 'teachings'])
-    //         ->where('user_id', Auth::id())
-    //         ->get();
-
-    //     return view('pages.user-account.page', compact('booking'));
-    // }
     public function UsersAccount()
     {
         $userBookings = CourseBooking::with(['course.teachings', 'teachings'])
             ->where('user_id', Auth::id())
             ->get();
 
-        // ดึงข้อมูลการจองทั้งหมด เพื่อป้องกันเวลาซ้ำ
         $allBookings = CourseBooking::select('booking_date', 'scheduled_datetime')->get();
 
-        // สร้าง booking map: [ 'YYYY-MM-DD' => [scheduled_datetime_id, ...] ]
         $bookingMap = [];
         foreach ($allBookings as $booking) {
             $date = \Carbon\Carbon::parse($booking->booking_date)->toDateString();
@@ -53,5 +43,12 @@ class UsersController extends Controller
         $booking->save();
 
         return redirect()->back()->with('success', 'บันทึกวันเวลาเรียนสำเร็จแล้ว');
+    }
+
+    public function UsersAccountBooking($id)
+    {
+        $booking = CourseBooking::with(['course.teachings', 'teachings'])->findOrFail($id);
+
+        return view('pages.user-account.booking_create', compact('booking'));
     }
 }
