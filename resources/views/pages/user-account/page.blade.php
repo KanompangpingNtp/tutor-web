@@ -70,6 +70,11 @@
         <div class="container py-1">
             <h1 class="mb-4 text-center">ประวัติการจองคอร์ส</h1><br>
 
+            <a href="{{route('SubjectCategory')}}" class="btn btn-primary">กลับหน้าหลัก</a>
+
+            <br>
+            <br>
+
             <table class="table table-striped" id="data_table" style="font-size: 16px;">
                 <thead>
                     <tr>
