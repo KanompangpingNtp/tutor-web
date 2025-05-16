@@ -21,15 +21,6 @@ class CourseController extends Controller
 
     public function BookingCreate(Request $request)
     {
-        // $request->validate([
-        //     'course_id' => 'required|exists:courses,id',
-        //     'note' => 'nullable|string|max:255',
-        //     'payment_status' => 'required|in:1,2',
-        //     'transfer_slip' => 'required|file|mimes:jpeg,png|max:10240',
-        //     'amount_times' => 'required|numeric|min:1',
-        // ]);
-
-        // dd($request);
 
         $transferSlipPath = null;
         if ($request->hasFile('transfer_slip')) {

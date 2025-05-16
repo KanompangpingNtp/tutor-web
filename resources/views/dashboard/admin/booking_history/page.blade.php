@@ -11,6 +11,7 @@
                 <table class="table table-striped" id="data_table">
                     <thead>
                         <tr>
+                            <th class="text-center">ชื่อผู้จอง</th>
                             <th class="text-center">ชื่อคอร์ส</th>
                             <th class="text-center">วันที่จอง</th>
                             <th class="text-center">วันเรียน</th>
@@ -23,6 +24,7 @@
                     <tbody>
                         @foreach ($booking as $item)
                         <tr>
+                            <td class="text-center">{{ $item->user->name ?? '-' }}</td>
                             <td class="text-center">{{ $item->course->course_name ?? '-' }}</td>
                             <td class="text-center">{{ \Carbon\Carbon::parse($item->booking_date)->format('d/m/Y') }}</td>
                             <td class="text-center">

@@ -13,7 +13,12 @@ class TeachingScheduleController extends Controller
 {
     public function TeachingSchedulePage()
     {
-        $booking = BookingLogs::with(['course', 'bookings.user'])->get();
+        // $booking = BookingLogs::with(['course', 'bookings.user'])->get();
+        $booking = BookingLogs::with(['course', 'bookings.user'])
+            ->whereHas('bookings', function ($query) {
+                $query->where('status', 2);
+            })
+            ->get();
 
         $events = $booking
             ->groupBy(function ($item) {
@@ -39,6 +44,7 @@ class TeachingScheduleController extends Controller
                         'id' => $item->id,
                         'name' => optional($item->user)->name ?? '-',
                         'time' => $timeString,
+                        'course_booking_id' => $item->course_booking_id,
                     ];
                 })->values();
             });
@@ -53,17 +59,29 @@ class TeachingScheduleController extends Controller
         return view('dashboard.tutor.teaching_schedule.teaching_schedule_details.page_details', compact('bookings'));
     }
 
-
     public function TeachingScheduleUpdateStatus($id)
     {
-        $booking = CourseBooking::find($id);
-        $booking->tutor_status = '1';
-        $booking->save();
+        $bookingLog = BookingLogs::with('bookings')->findOrFail($id);
+        $bookingLog->status = 2;
+        $bookingLog->save();
+
+        $courseBooking = $bookingLog->bookings;
+        $courseBooking->tutor_status = '2';
+        $courseBooking->save();
+
+        $times = explode(' - ', $bookingLog->scheduled_datetime);
+        $startTime = \Carbon\Carbon::parse($times[0]);
+        $endTime = \Carbon\Carbon::parse($times[1]);
+
+        $taughtHours = $startTime->diffInMinutes($endTime) / 60;
 
         TeachingLogs::create([
-            'course_id' => $booking->course_id,
+            'course_id' => $bookingLog->course_id,
             'user_id' => auth()->id(),
             'log_date_time' => now(),
+            'taught_hours' => $taughtHours,
+            'teaching_date' => $bookingLog->teaching_schedule_day,
+            'course_booking_id' => $courseBooking->id,
         ]);
 
         return redirect()->back()->with('success', 'อัพเดทการสอนสำเร็จ');

@@ -46,8 +46,8 @@
                             <img src="{{ $teacherResume->user->profile_image ? asset('storage/' . $teacherResume->user->profile_image) : asset('teacher-history/รูปตัวอย่างคน.png') }}" alt="img-teacher" class="img-fluid img-teacher mb-3" style="max-height: 250px; width: 250px; object-fit: cover;">
                             <div class="text-start w-100 px-3">
                                 <p><strong>ชื่อผู้สอน:</strong> {{ $teacherResume->user->name ?? '-' }}</p>
-                                <p><strong>อีเมล:</strong> {{ $teacherResume->user->email ?? '-' }}</p>
-                                <p><strong>เบอร์ติดต่อ:</strong> {{ $teacherResume->user->phone ?? '-' }}</p>
+                                {{-- <p><strong>อีเมล:</strong> {{ $teacherResume->user->email ?? '-' }}</p>
+                                <p><strong>เบอร์ติดต่อ:</strong> {{ $teacherResume->user->phone ?? '-' }}</p> --}}
                             </div>
                         </div>
                     </div>

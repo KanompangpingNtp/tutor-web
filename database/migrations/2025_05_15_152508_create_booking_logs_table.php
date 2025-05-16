@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('booking_day');
             $table->string('scheduled_datetime');
             $table->date('teaching_schedule_day');
+            $table->string('status');
+            $table->string('teaching_id');
             $table->timestamps();
         });
     }

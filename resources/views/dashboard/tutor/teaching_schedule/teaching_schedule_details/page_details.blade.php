@@ -24,18 +24,20 @@
                             <td class="text-center">{{ \Carbon\Carbon::parse($bookings->teaching_schedule_day)->format('d/m/Y') }}</td>
                             <td class="text-center">{{ $bookings->scheduled_datetime ?? '-' }}</td>
                             <td class="text-center">
-                                @if(optional($bookings->bookings)->status === 2)
-                                <span class="text-success">ยืนยันแล้ว</span>
+                                @if($bookings->status == 2)
+                                <span class="text-success">สอนแล้ว</span>
+                                @elseif($bookings->status == 1)
+                                <span class="text-warning">ยังไม่ได้สอน</span>
                                 @else
-                                <span class="text-danger">ยังไม่ยืนยัน</span>
+                                <span class="text-muted">ไม่ทราบสถานะ</span>
                                 @endif
                             </td>
                             <td class="text-center">
-                                <form action="#" method="POST" style="display:inline;">
+                                <form action="{{route('TeachingScheduleUpdateStatus',$bookings->id)}}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('PUT')
                                     <button type="submit" class="btn btn-success btn-sm" {{ $bookings->status == 2 ? 'disabled' : '' }}>
-                                        ยืนยันสถานะ
+                                        ยืนยันการสอน
                                     </button>
                                 </form>
                             </td>

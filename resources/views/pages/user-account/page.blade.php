@@ -181,14 +181,6 @@
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label>รูปแบบการเรียน</label><br>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="learning_style" id="long_term" value="1">
-                                        <label class="form-check-label" for="long_term">เรียนทุกอาทิตย์</label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group mb-3">
                                     <label for="note">หมายเหตุ (ถ้ามี)</label>
                                     <textarea name="note" class="form-control"></textarea>
                                 </div>

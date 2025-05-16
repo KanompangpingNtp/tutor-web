@@ -19,53 +19,22 @@
             <div class="card-body">
                 <h4 class="fw-bold py-3 mb-4 text-center">สรุปรายได้ของติวเตอร์</h4>
 
-                <form method="GET" action="{{ route('IncomeSummaryPage') }}" class="row mb-4">
-                    <div class="col-md-2">
-                        <label for="month">เดือน</label>
-                        <select name="month" id="month" class="form-control">
-                            <option value="">-- เลือกเดือน --</option>
-                            @for ($m = 1; $m <= 12; $m++) <option value="{{ $m }}" {{ (request('month', $month) == $m) ? 'selected' : '' }} {{ !in_array($m, $availableMonths) ? 'disabled' : '' }}>
-                                {{ \Carbon\Carbon::create()->month($m)->locale('th')->isoFormat('MMMM') }}
-                                </option>
-                                @endfor
-                        </select>
-                    </div>
-
-                    <div class="col-md-2">
-                        <label for="year">ปี</label>
-                        <select name="year" id="year" class="form-control">
-                            <option value="">-- เลือกปี --</option>
-                            @for ($y = now()->year; $y >= 2020; $y--)
-                            <option value="{{ $y }}" {{ (request('year', $year) == $y) ? 'selected' : '' }} {{ !in_array($y, $availableYears) ? 'disabled' : '' }}>
-                                {{ $y + 543 }}
-                            </option>
-                            @endfor
-                        </select>
-                    </div>
-
-
-                    <div class="col-md-3 align-self-end">
-                        <button type="submit" class="btn btn-primary"><i class='bx bx-search-alt-2'></i></button>
-                    </div>
-                </form>
-
-
-                <table class="table table-bordered" id="data_table">
+                <table class="table" id="data_table">
                     <thead>
                         <tr>
-                            <th class="text-center">ชื่อ</th>
-                            <th class="text-center">Email</th>
-                            <th class="text-center">จำนวนชั่วโมงที่สอน</th>
-                            <th class="text-center">รายได้รวม (บาท)</th>
+                            <th>ติวเตอร์</th>
+                            <th>คอร์ส</th>
+                            <th>จำนวนชั่วโมงที่สอน</th>
+                            <th>รายได้รวม</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($tutors as $tutor)
+                        @foreach($summary as $row)
                         <tr>
-                            <td class="text-center">{{ $tutor->name }}</td>
-                            <td class="text-center">{{ $tutor->email }}</td>
-                            <td class="text-center">{{ $tutor->total_teaching_hours }} ชั่วโมง</td>
-                            <td class="text-center">{{ $tutor->total_income }}</td>
+                            <td>{{ $row['tutor']->name }}</td>
+                            <td>{{ $row['course']->course_name }}</td>
+                            <td>{{ number_format($row['total_hours'], 2) }} ชั่วโมง</td>
+                            <td>{{ number_format($row['total_income'], 2) }} บาท</td>
                         </tr>
                         @endforeach
                     </tbody>

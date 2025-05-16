@@ -6,66 +6,56 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\CourseBooking;
+use App\Models\BookingLogs;
+use App\Models\CourseTeaching;
 
 class IncomeSummaryController extends Controller
 {
     public function IncomeSummaryPage(Request $request)
     {
-        $month = $request->month ?? now()->month;
-        $year = $request->year ?? now()->year;
-
-        $availableMonths = CourseBooking::selectRaw('MONTH(created_at) as month')
-            ->distinct()
-            ->pluck('month')
-            ->toArray();
-
-        $availableYears = CourseBooking::selectRaw('YEAR(created_at) as year')
-            ->distinct()
-            ->pluck('year')
-            ->toArray();
-
-        $tutors = User::where('level', '2')
-            ->with(['courses.teachings.bookings'])
+        $logs = BookingLogs::with(['teaching.course.user']) // โหลดทุกความสัมพันธ์ที่จำเป็น
+            ->where('status', 2)
             ->get();
 
-        foreach ($tutors as $tutor) {
-            $income = 0;
-            $totalHours = 0;
+        $summary = [];
 
-            foreach ($tutor->courses as $course) {
-                foreach ($course->teachings as $teaching) {
-                    $filteredBookings = $teaching->bookings->filter(function ($booking) use ($month, $year) {
-                        $date = \Carbon\Carbon::parse($booking->created_at);
-                        return (
-                            (!$month || $date->month == $month) &&
-                            (!$year || $date->year == $year) &&
-                            $booking->tutor_status == 1
-                        );
-                    });
+        foreach ($logs as $log) {
+            $teaching = $log->teaching;
+            if (!$teaching || !$teaching->course) continue;
 
-                    $bookingsCount = $filteredBookings->count();
+            $course = $teaching->course;
+            $tutor = $course->user;
 
-                    if ($bookingsCount > 0) {
-                        $durationHours = \Carbon\Carbon::parse($teaching->course_starttime)
-                            ->diffInMinutes(\Carbon\Carbon::parse($teaching->course_endtime)) / 60;
+            if (!$tutor) continue;
 
-                        $income += $bookingsCount * $teaching->hourly_rate;
+            $tutorId = $tutor->id;
+            $courseId = $course->id;
 
-                        $totalHours += $bookingsCount * $durationHours;
-                    }
-                }
+            $start = \Carbon\Carbon::parse($teaching->course_starttime);
+            $end = \Carbon\Carbon::parse($teaching->course_endtime);
+            $taughtHours = $start->diffInMinutes($end) / 60;
+
+            $hourlyRate = $teaching->hourly_rate ?? 0;
+
+            // ใช้ tutorId + courseId แยกรายวิชาของติวเตอร์
+            $key = $tutorId . '_' . $courseId;
+
+            if (!isset($summary[$key])) {
+                $summary[$key] = [
+                    'tutor' => $tutor,
+                    'course' => $course,
+                    'total_income' => 0,
+                    'total_hours' => 0,
+                ];
             }
 
-            $tutor->total_income = number_format($income, 2);
-            $tutor->total_teaching_hours = number_format($totalHours, 2);
+            $summary[$key]['total_income'] += $hourlyRate;
+            $summary[$key]['total_hours'] += $taughtHours;
         }
 
-        return view('dashboard.admin.income_summary.page', compact(
-            'tutors',
-            'availableMonths',
-            'availableYears',
-            'month',
-            'year'
-        ));
+        // แปลงเป็น collection
+        $summary = collect($summary);
+
+        return view('dashboard.admin.income_summary.page', compact('summary'));
     }
 }

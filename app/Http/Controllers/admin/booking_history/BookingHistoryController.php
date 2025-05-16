@@ -11,7 +11,7 @@ class BookingHistoryController extends Controller
 {
     public function AdminBookingHistoryPage()
     {
-        $booking = CourseBooking::with(['course', 'teachings'])->get();
+        $booking = CourseBooking::with(['course', 'teachings', 'user'])->get();
 
         return view('dashboard.admin.booking_history.page', compact('booking'));
     }

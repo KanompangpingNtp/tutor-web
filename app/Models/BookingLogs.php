@@ -16,7 +16,8 @@ class BookingLogs extends Model
         'booking_day',
         'scheduled_datetime',
         'teaching_schedule_day',
-        'status'
+        'status',
+        'teaching_id'
     ];
 
     public function user()
@@ -31,6 +32,11 @@ class BookingLogs extends Model
 
     public function bookings()
     {
-        return $this->belongsTo(CourseBooking::class);
+        return $this->belongsTo(CourseBooking::class, 'course_booking_id');
+    }
+
+    public function teaching()
+    {
+        return $this->belongsTo(CourseTeaching::class, 'teaching_id');
     }
 }

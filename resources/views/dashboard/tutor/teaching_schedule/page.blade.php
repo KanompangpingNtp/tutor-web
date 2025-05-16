@@ -120,6 +120,18 @@
         const events = @json($events);
         console.log(events);
 
+        const colorMap = {};
+        const colors = ['#FFB6C1', '#90EE90', '#ADD8E6', '#FFD700', '#FFA07A', '#20B2AA', '#9370DB'];
+        let colorIndex = 0;
+
+        function getColorForBooking(courseBookingId) {
+            if (!colorMap[courseBookingId]) {
+                colorMap[courseBookingId] = colors[colorIndex % colors.length];
+                colorIndex++;
+            }
+            return colorMap[courseBookingId];
+        }
+
         let currentDate = new Date();
 
         function renderCalendar(date) {
@@ -167,12 +179,15 @@
                 // ถ้ามีกิจกรรม
                 if (events[dateStr]) {
                     events[dateStr].forEach(event => {
-                        // สร้างลิงก์ของกิจกรรม และใส่ class "event" ไปที่ <a> เลย
                         const dayCellLink = document.createElement("a");
                         dayCellLink.href = `{{ route('TeachingScheduleDetails', ['id' => '__id__']) }}`.replace('__id__', event.id);
-                        dayCellLink.className = "event"; // ใช้ class event ที่กำหนดใน CSS
+                        dayCellLink.className = "event";
                         dayCellLink.textContent = `${event.name}\n${event.time}`;
                         dayCellLink.style.whiteSpace = 'pre-line';
+
+                        // ใช้สีจาก course_booking_id
+                        dayCellLink.style.backgroundColor = getColorForBooking(event.course_booking_id);
+                        dayCellLink.style.color = "#000"; // ให้สีตัวอักษรอ่านง่าย
                         dayCell.appendChild(dayCellLink);
                     });
                 }
