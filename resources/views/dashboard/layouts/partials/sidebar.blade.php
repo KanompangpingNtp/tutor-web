@@ -38,15 +38,15 @@
                     </a>
                 </li>
 
-                <li class="menu-item {{ request()->is('admin/courses_offered') ? 'active' : '' }}">
-                    <a href="{{route('CoursesOfferedPage')}}" class="menu-link">
-                        <div>จัดการคอร์สที่เปิดสอน</div>
-                    </a>
-                </li>
-
                 <li class="menu-item {{ request()->is('admin/subject_users') ? 'active' : '' }}">
                     <a href="{{route('SubjectUsersPage')}}" class="menu-link">
                         <div>จัดการครูประจำวิชา</div>
+                    </a>
+                </li>
+
+                <li class="menu-item {{ request()->is('admin/courses_offered') ? 'active' : '' }}">
+                    <a href="{{route('CoursesOfferedPage')}}" class="menu-link">
+                        <div>จัดการคอร์สที่เปิดสอน</div>
                     </a>
                 </li>
             </ul>

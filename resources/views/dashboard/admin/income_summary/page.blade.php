@@ -19,6 +19,44 @@
             <div class="card-body">
                 <h4 class="fw-bold py-3 mb-4 text-center">สรุปรายได้ของติวเตอร์</h4>
 
+                <form method="GET" action="{{ route('IncomeSummaryPage') }}" class="row g-2 mb-3">
+                    <div class="col-md-2">
+                        <label for="month" class="form-label">เลือกเดือน</label>
+                        <select name="month" class="form-select" required>
+                            <option value="">-- เลือกเดือน --</option>
+                            @foreach($allMonths as $month)
+                            @php
+                            $isDisabled = !in_array($month, $monthsAvailable);
+                            @endphp
+                            <option value="{{ $month }}" {{ request('month') == $month ? 'selected' : '' }} {{ $isDisabled ? 'disabled' : '' }}>
+                                {{ \Carbon\Carbon::create()->month($month)->locale('th')->isoFormat('MMMM') }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="year" class="form-label">เลือกปี</label>
+                        <select name="year" class="form-select" required>
+                            <option value="">-- เลือกปี --</option>
+                            @foreach($allYears as $year)
+                            @php
+                            $isDisabled = !in_array($year, $yearsAvailable);
+                            @endphp
+                            <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }} {{ $isDisabled ? 'disabled' : '' }}>
+                                {{ $year + 543 }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary">ค้นหา</button>
+                    </div>
+                </form>
+
+                <br>
+
                 <table class="table" id="data_table">
                     <thead>
                         <tr>
