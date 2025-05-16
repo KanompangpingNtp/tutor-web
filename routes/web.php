@@ -43,7 +43,6 @@ Route::get('/', [HomeController::class, 'Home'])->name('Home');
 Route::get('/subject_category/page', [HomeController::class, 'SubjectCategory'])->name('SubjectCategory');
 
 Route::get('/subject_category/course/page/{id}', [HomeController::class, 'CoursePage'])->name('CoursePage');
-Route::get('/subject_category/course/detail/page/{id}', [HomeController::class, 'CourseDetail'])->name('CourseDetail');
 Route::get('/course_bookings/{id}', [CourseController::class, 'BookingPage'])->name('BookingPage');
 
 Route::get('/subject_category/course/teacher_history/{id}', [HomeController::class, 'TeacherHistoryPage'])->name('TeacherHistoryPage');
@@ -116,7 +115,11 @@ Route::middleware(['auth', 'check.level:2'])->group(function () {
 
 Route::middleware(['auth', 'check.level:3'])->group(function () {
     Route::get('/users/account/detail', [UsersController::class, 'UsersAccount'])->name('UsersAccount');
-    Route::post('/course_bookings/create', [CourseController::class, 'BookingCreate'])->name('BookingCreate');
     Route::post('/users/account/booking/schedule/{id}', [UsersController::class, 'schedule'])->name('booking.schedule');
     Route::get('/user-account/booking/{id}', [UsersController::class, 'UsersAccountBooking'])->name('UsersAccountBooking');
+
+    Route::get('/subject_category/course/detail/page/{id}', [HomeController::class, 'CourseDetail'])->name('CourseDetail');
+    Route::post('/course_bookings/create', [CourseController::class, 'BookingCreate'])->name('BookingCreate');
+
+
 });

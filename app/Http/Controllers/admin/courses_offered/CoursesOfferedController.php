@@ -72,6 +72,8 @@ class CoursesOfferedController extends Controller
 
             'amount_time_hour' => 'nullable|array',
             'amount_time_hour.*' => 'nullable|string|max:255',
+
+            'price' => 'required|numeric|min:0',
         ]);
 
         $course = Course::create([
@@ -80,6 +82,7 @@ class CoursesOfferedController extends Controller
             'course_name' => $request->course_name,
             'course_details' => $request->course_details,
             'course_duration_hour' => $request->course_duration_hour,
+            'price' => $request->price,
         ]);
 
         if ($request->has('amount_time_hour')) {
@@ -158,6 +161,7 @@ class CoursesOfferedController extends Controller
             'course_name' => $request->course_name,
             'course_details' => $request->course_details,
             'course_duration_hour' => $request->course_duration_hour,
+            'price' => $request->price,
         ]);
 
         // อัปเดต/เพิ่ม/ลบข้อมูล CourseAmountTime

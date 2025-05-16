@@ -9,10 +9,13 @@ class TeachingLogs extends Model
 {
     use HasFactory;
 
-      protected $fillable = [
+    protected $fillable = [
         'course_id',
         'user_id',
         'log_date_time',
+        'taught_hours',
+        'teaching_date',
+        'course_booking_id'
     ];
 
     public function course()
@@ -23,5 +26,10 @@ class TeachingLogs extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function booking()
+    {
+        return $this->belongsTo(CourseBooking::class, 'course_booking_id');
     }
 }

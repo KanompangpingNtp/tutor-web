@@ -39,7 +39,7 @@ class BookingHistoryController extends Controller
     {
         $booking = CourseBooking::findOrFail($id);
 
-        $booking->payment_status = 'pending';
+        $booking->payment_status = '2';
 
         $booking->save();
 

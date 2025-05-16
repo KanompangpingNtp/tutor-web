@@ -14,7 +14,6 @@ class CourseController extends Controller
     {
         $courses = Course::with('user', 'files', 'teachings')->find($id);
 
-        // ดึงรายการ booking ที่มี course_id นี้
         $bookings = CourseBooking::where('course_id', $id)->get();
 
         return view('pages.course_bookings.course_bookings', compact('courses', 'bookings'));
@@ -22,12 +21,13 @@ class CourseController extends Controller
 
     public function BookingCreate(Request $request)
     {
-        $request->validate([
-            'course_id' => 'required|exists:courses,id',
-            'note' => 'nullable|string|max:255',
-            'payment_status' => 'required|in:pending,confirmed',
-            'transfer_slip' => 'required|file|mimes:jpeg,png|max:10240',
-        ]);
+        // $request->validate([
+        //     'course_id' => 'required|exists:courses,id',
+        //     'note' => 'nullable|string|max:255',
+        //     'payment_status' => 'required|in:1,2',
+        //     'transfer_slip' => 'required|file|mimes:jpeg,png|max:10240',
+        //     'amount_times' => 'required|numeric|min:1',
+        // ]);
 
         // dd($request);
 
@@ -43,40 +43,9 @@ class CourseController extends Controller
             'status' => 1,
             'payment_status' => $request->payment_status,
             'transfer_slip' => $transferSlipPath,
+            'amount_times' => $request->amount_times,
         ]);
 
         return redirect()->back()->with('success', 'จองวันคอร์สเรียนเรียบร้อย');
     }
-
-    // public function BookingCreate(Request $request)
-    // {
-    //     $request->validate([
-    //         'booking_date' => 'required|date',
-    //         'scheduled_datetime' => 'required|exists:course_teachings,id',
-    //         'note' => 'nullable|string|max:255',
-    //         'payment_status' => 'required|in:pending,confirmed',
-    //         'transfer_slip' => 'required|file|mimes:jpeg,png|max:10240',
-    //         'course_id' => 'required|exists:courses,id',
-    //     ]);
-
-    //     // dd($request);
-
-    //     $transferSlipPath = null;
-    //     if ($request->hasFile('transfer_slip')) {
-    //         $transferSlipPath = $request->file('transfer_slip')->store('transfer_slips', 'public');
-    //     }
-
-    //     CourseBooking::create([
-    //         'course_id' => $request->course_id,
-    //         'user_id' => auth()->id(),
-    //         'booking_date' => $request->booking_date,
-    //         'scheduled_datetime' => $request->scheduled_datetime,
-    //         'note' => $request->note,
-    //         'status' => 1,
-    //         'payment_status' => $request->payment_status,
-    //         'transfer_slip' => $transferSlipPath,
-    //     ]);
-
-    //     return redirect()->back()->with('success', 'จองวันเวลาเรียนเรียบร้อยแล้ว');
-    // }
 }

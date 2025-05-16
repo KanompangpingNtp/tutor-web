@@ -43,15 +43,9 @@
                                 @endif
                             </td>
                             <td class="text-center">
-                                @if($item->payment_status === 'pending')
                                 <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#paymentStatusModal{{ $item->id }}">
                                     ชำระแล้ว
                                 </button>
-                                @elseif($item->payment_status === 'confirmed')
-                                <span class="badge bg-danger" data-bs-toggle="modal" data-bs-target="#slipModal{{ $item->id }}" style="cursor:pointer;">
-                                    ยังไม่ชำระ
-                                </span>
-                                @endif
                             </td>
                             <td class="text-center">
                                 <span class="note-preview" data-note="{{ $item->note ?? '-' }}">
@@ -59,7 +53,7 @@
                                 </span>
                             </td>
                             <td class="d-flex justify-content-center">
-                                @if($item->payment_status === 'confirmed')
+                                @if($item->payment_status === '1')
                                 <form action="{{ route('BookingHistoryUpdatePayment', $item->id) }}" method="POST">
                                     @csrf
                                     @method('PUT')

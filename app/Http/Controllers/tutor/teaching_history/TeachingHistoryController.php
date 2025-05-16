@@ -8,14 +8,12 @@ use App\Models\TeachingLogs;
 
 class TeachingHistoryController extends Controller
 {
-    public function TutorTeachingHistory ()
+    public function TutorTeachingHistory()
     {
-         $teachingLogs = TeachingLogs::with(['course', 'course.teachings'])
-        ->where('user_id', auth()->id())
-        ->get();
+        $teachingLogs = TeachingLogs::with(['course', 'course.teachings', 'booking.user'])
+            ->where('user_id', auth()->id())
+            ->get();
 
-        //  dd($teachingLogs);
-
-        return view('dashboard.tutor.teaching_history.page',compact('teachingLogs'));
+        return view('dashboard.tutor.teaching_history.page', compact('teachingLogs'));
     }
 }

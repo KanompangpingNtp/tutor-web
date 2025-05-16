@@ -9,7 +9,7 @@ class Course extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['subject_id', 'user_id', 'course_name', 'course_details', 'course_duration_hour'];
+    protected $fillable = ['subject_id', 'user_id', 'course_name', 'course_details', 'course_duration_hour', 'price'];
 
     public function subject()
     {
@@ -49,5 +49,10 @@ class Course extends Model
     public function amountTimes()
     {
         return $this->hasMany(CourseAmountTime::class);
+    }
+
+    public function bookingsLogs()
+    {
+        return $this->hasMany(BookingLogs::class);
     }
 }

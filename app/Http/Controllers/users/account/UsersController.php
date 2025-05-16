@@ -6,44 +6,106 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CourseBooking;
 use Illuminate\Support\Facades\Auth;
+use App\Models\BookingLogs;
+use App\Models\CourseTeaching;
+use Carbon\Carbon;
 
 class UsersController extends Controller
 {
     public function UsersAccount()
     {
-        $userBookings = CourseBooking::with(['course.teachings', 'teachings'])
+        $booking = CourseBooking::with(['course.teachings.day', 'teachings', 'course.user'])
             ->where('user_id', Auth::id())
             ->get();
 
-        $allBookings = CourseBooking::select('booking_date', 'scheduled_datetime')->get();
-
-        $bookingMap = [];
-        foreach ($allBookings as $booking) {
-            $date = \Carbon\Carbon::parse($booking->booking_date)->toDateString();
-            $bookingMap[$date][] = $booking->scheduled_datetime;
-        }
-
-        return view('pages.user-account.page', [
-            'booking' => $userBookings,
-            'bookingMap' => $bookingMap
-        ]);
+        return view(
+            'pages.user-account.page',
+            compact('booking')
+        );
     }
+
+    // public function schedule(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'booking_day' => 'required|string',
+    //         'scheduled_datetime' => 'required|exists:course_teachings,id',
+    //         'learning_style' => 'nullable|string',
+    //     ]);
+
+    //     $booking = CourseBooking::findOrFail($id);
+    //     $booking->booking_day = $request->booking_day;
+    //     $booking->scheduled_datetime = $request->scheduled_datetime;
+    //     $booking->learning_style = $request->learning_style;
+    //     $booking->note = $request->note ?? null;
+    //     $booking->save();
+
+    //     return redirect()->back()->with('success', 'บันทึกวันเวลาเรียนสำเร็จแล้ว');
+    // }
 
     public function schedule(Request $request, $id)
     {
         $request->validate([
-            'booking_date' => 'required|date',
-            'scheduled_datetime' => 'required|exists:course_teachings,id',
+            'scheduled_datetime' => 'required|array|min:1',
+            'scheduled_datetime.*' => 'required|integer|exists:course_teachings,id',
+            'learning_style' => 'nullable|string',
+            'note' => 'nullable|string',
         ]);
 
         $booking = CourseBooking::findOrFail($id);
-        $booking->booking_date = $request->booking_date;
-        $booking->scheduled_datetime = $request->scheduled_datetime;
+        $booking->learning_style = $request->learning_style;
         $booking->note = $request->note ?? null;
+
+        $scheduledIds = $request->scheduled_datetime;
+        $booking->scheduled_datetime = implode(',', $scheduledIds);
         $booking->save();
+
+        // ดึง teachings กับ day_name ของแต่ละ teaching
+        $teachings = CourseTeaching::whereIn('id', $scheduledIds)->with('day')->get();
+
+        // เริ่มต้นวันนับจากวันที่สร้าง booking
+        $startDate = Carbon::parse($booking->created_at)->startOfDay();
+
+        $dayName = [];
+
+        $time = [];
+        foreach ($teachings as $teaching) {
+            $dayName[] = $teaching->day->day_name ?? null;
+            $time[$teaching->day->day_name] = $teaching->course_starttime . ' - ' . $teaching->course_endtime;
+            if (!$dayName) continue;
+        }
+
+        $dates = [];
+        $currentDate = $startDate->copy();
+
+        while (count($dates) < $booking->amount_times) {
+            if (in_array($currentDate->format('l'), $dayName)) {
+                $dates[] = $currentDate->copy();
+            }
+            $currentDate->addDay();
+        }
+
+        // dd($dates);
+
+        foreach ($dates as $date) {
+            $x = Carbon::parse($date->format('Y-m-d'));
+            $dayName = $x->format('l');
+            // dd($time[$dayName]);
+            BookingLogs::create([
+                'user_id' => $booking->user_id,
+                'course_id' => $booking->course_id,
+                'course_booking_id' => $booking->id,
+                'booking_day' => $dayName,
+                'scheduled_datetime' => $time[$dayName],
+                'teaching_schedule_day' => $date->format('Y-m-d'),
+            ]);
+        }
+
+        // dd($dates);
 
         return redirect()->back()->with('success', 'บันทึกวันเวลาเรียนสำเร็จแล้ว');
     }
+
+
 
     public function UsersAccountBooking($id)
     {

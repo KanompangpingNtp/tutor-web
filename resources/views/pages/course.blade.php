@@ -89,7 +89,7 @@
 
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <span class="fw-bold" style="font-size: 13px;">
-                                    {{ number_format($course->teachings->first()->hourly_rate, 2) }} บาท / {{ $course->course_duration_hour }} ชั่วโมง
+                                    {{$course->price}} บาท / {{ $course->course_duration_hour }} ชั่วโมง
                                 </span>
                                 {{-- <a href="{{route('TeacherHistoryPage',$course->id)}}" class="text-primary fw-semibold" style="font-size: 13px; text-decoration: none;">
                                     <span style="color: black;">ผู้สอน </span>{{$course->user->name}}

@@ -44,7 +44,7 @@
                                     </button>
 
                                     {{-- <button type="button" class="btn btn-warning btn-sm me-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $course->id }}">
-                                        <i class='bx bx-edit'></i>
+                                    <i class='bx bx-edit'></i>
                                     </button> --}}
                                     <a href="{{route('CoursesOfferedUpdatePage',$course->id)}}" class="btn btn-warning btn-sm me-1"> <i class='bx bx-edit'></i></a>
 
@@ -128,7 +128,7 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>วันสอน</th> {{-- เพิ่มคอลัมน์วัน --}}
+                                            <th>วันสอน</th>
                                             <th>เวลาเริ่ม</th>
                                             <th>เวลาสิ้นสุด</th>
                                             <th>รวมระยะเวลา (ชม.)</th>
@@ -138,7 +138,7 @@
                                     <tbody>
                                         @foreach($course->teachings as $teaching)
                                         <tr>
-                                            <td>{{ $teaching->day->day_name ?? '-' }}</td> {{-- แสดงชื่อวัน --}}
+                                            <td>{{ $teaching->day->day_name ?? '-' }}</td>
                                             <td>{{ \Carbon\Carbon::parse($teaching->course_starttime)->format('H:i') }}</td>
                                             <td>{{ \Carbon\Carbon::parse($teaching->course_endtime)->format('H:i') }}</td>
                                             <td>
@@ -154,7 +154,16 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+                                @endif
 
+                                {{-- แสดงจำนวนชั่วโมงที่เปิดสอน --}}
+                                @if ($course->amountTimes->isNotEmpty())
+                                <h6 class="mt-4">จำนวนชั่วโมงที่เปิดสอน</h6>
+                                <ul>
+                                    @foreach($course->amountTimes as $amountTime)
+                                    <li>{{ $amountTime->amount_time_hour }} ชั่วโมง</li>
+                                    @endforeach
+                                </ul>
                                 @endif
                             </div>
                         </div>

@@ -176,18 +176,34 @@
                                 <input type="hidden" name="course_id" value="{{ $courses->id }}">
 
                                 <div class="form-group mb-3">
+                                    <label for="amount_times">เลือกจำนวนชั่วโมงเรียน</label>
+                                    <select id="amount_times" name="amount_times" class="form-control" required>
+                                        <option value="">-- เลือกจำนวนชั่วโมง --</option>
+                                        @foreach($courses->amountTimes as $amount)
+                                        <option value="{{ $amount->amount_time_hour }}">{{ $amount->amount_time_hour }} ชั่วโมง</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group mb-3">
                                     <label for="payment_status">ประเภทการชำระเงิน</label>
                                     <select id="payment_status" name="payment_status" class="form-control" required>
-                                        <option value="confirmed">ชำระเงินจ่ายก่อนเรียน</option>
+                                        <option value="1">ชำระเงินจ่ายก่อนเรียน</option>
 
                                         @if(auth()->check() && auth()->user()->level == 1)
-                                        <option value="confirmed">ชำระเงินจ่ายหลังเรียน</option>
+                                        <option value="1">ชำระเงินจ่ายหลังเรียน</option>
                                         @endif
                                     </select>
                                 </div>
 
-                                <div class="mb-3">
-                                    <p><strong>บัญชี :</strong> 123-4567-89-0 ธนาคารไทยกรุง</p>
+                                <p>ราคาคอร์ส : {{$courses->price}} บาท</p>
+
+                                <div class="mb-4">
+                                    <p><strong>บัญชี : นางสาวเพ็ญศรี ราชคม</strong> <br><br>
+                                        ไทยพาณิชย์ (SCB) 3652567781 <br>
+                                        กรุงเทพ (BBL) 8707060284 <br>
+                                        กรุงไทย (KTB) 4560075123 <br>
+                                    </p>
                                 </div>
 
                                 <div class="form-group mb-3">

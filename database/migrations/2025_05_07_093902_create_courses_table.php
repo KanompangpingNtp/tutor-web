@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('course_name');
             $table->text('course_details');
             $table->integer('course_duration_hour');
+            $table->integer('price');
             $table->timestamps();
         });
     }

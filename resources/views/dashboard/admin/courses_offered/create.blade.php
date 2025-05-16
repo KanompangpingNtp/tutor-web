@@ -4,6 +4,9 @@
     <div class="">
         <div class="card">
             <div class="card-body">
+
+                <h4 class="fw-bold py-3 mb-4 text-center">สร้างคอร์สที่เปิดสอน</h4>
+
                 <form action="{{route('CoursesOfferedCreate')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
@@ -49,6 +52,11 @@
                         <div id="file-list" class="mt-1">
                             <div class="d-flex flex-wrap gap-3"></div>
                         </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">ราคาคอร์ส (บาท)</label>
+                        <input type="number" name="price" class="form-control" required>
                     </div>
 
                     <div class="mb-3">
@@ -111,7 +119,7 @@
                             <button type="button" class="btn btn-danger btn-sm remove-schedule">ลบชุดนี้</button>
                         </div>
                     </div>
-                    <div>
+                    <div class="d-flex justify-content-center">
                         <button type="submit" class="btn btn-primary">บันทึกคอร์ส</button>
                     </div>
                 </form>
@@ -121,16 +129,17 @@
 </div>
 
 <script>
-    document.getElementById('add-amount-time').addEventListener('click', function () {
+    document.getElementById('add-amount-time').addEventListener('click', function() {
         const template = document.getElementById('amount-time-template').content.cloneNode(true);
         document.getElementById('amount-time-container').appendChild(template);
     });
 
-    document.addEventListener('click', function (e) {
+    document.addEventListener('click', function(e) {
         if (e.target.classList.contains('remove-amount-time')) {
             e.target.closest('.amount-time-set').remove();
         }
     });
+
 </script>
 
 <style>

@@ -37,7 +37,7 @@ class HomeController extends Controller
 
     public function CourseDetail($id)
     {
-        $courses = Course::with('user', 'teachings')->find($id);
+        $courses = Course::with('user', 'teachings', 'amountTimes')->find($id);
 
         return view('pages.detail-course', compact('courses'));
     }

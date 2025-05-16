@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::table('course_teachings', function (Blueprint $table) {
                $table->foreignId('course_day_id')
-                  ->constrained('course_days') // หรือ 'course_days' ถ้าคุณตั้งชื่อตารางว่า course_days
+                  ->constrained('course_days')
                   ->onDelete('cascade')
-                  ->after('id'); // เพิ่มหลังคอลัมน์ id
+                  ->after('id');
         });
     }
 

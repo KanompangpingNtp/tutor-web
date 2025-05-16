@@ -117,7 +117,8 @@
     </div>
 
     <script>
-        const events = @json($events); // รับข้อมูลกิจกรรมจาก Laravel
+        const events = @json($events);
+        console.log(events);
 
         let currentDate = new Date();
 
@@ -170,13 +171,11 @@
                         const dayCellLink = document.createElement("a");
                         dayCellLink.href = `{{ route('TeachingScheduleDetails', ['id' => '__id__']) }}`.replace('__id__', event.id);
                         dayCellLink.className = "event"; // ใช้ class event ที่กำหนดใน CSS
-                        dayCellLink.textContent = event.name;
-
-                        // เพิ่มลิงก์กิจกรรมลงใน dayCell
+                        dayCellLink.textContent = `${event.name}\n${event.time}`;
+                        dayCellLink.style.whiteSpace = 'pre-line';
                         dayCell.appendChild(dayCellLink);
                     });
                 }
-
 
                 // เพิ่ม dayCell ลงในตาราง
                 grid.appendChild(dayCell);

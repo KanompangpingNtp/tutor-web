@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->datetime('log_date_time');
+            $table->float('taught_hours');
+            $table->date('teaching_date');
             $table->timestamps();
         });
     }

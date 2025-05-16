@@ -12,13 +12,14 @@ class CourseBooking extends Model
     protected $fillable = [
         'course_id',
         'user_id',
-        'booking_date',
         'scheduled_datetime',
         'status',
         'note',
         'payment_status',
         'transfer_slip',
-        'tutor_status'
+        'tutor_status',
+        'learning_style',
+        'amount_times'
     ];
 
     public function course()
@@ -34,5 +35,10 @@ class CourseBooking extends Model
     public function teachings()
     {
         return $this->belongsTo(CourseTeaching::class, 'scheduled_datetime');
+    }
+
+    public function bookingsLogs()
+    {
+        return $this->hasMany(BookingLogs::class);
     }
 }

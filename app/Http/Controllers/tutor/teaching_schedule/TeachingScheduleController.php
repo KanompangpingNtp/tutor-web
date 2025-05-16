@@ -6,48 +6,53 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CourseBooking;
 use App\Models\TeachingLogs;
+use App\Models\BookingLogs;
 use Illuminate\Support\Facades\Auth;
 
 class TeachingScheduleController extends Controller
 {
     public function TeachingSchedulePage()
     {
-        $booking = CourseBooking::with(['course', 'teachings'])->get();
+        $booking = BookingLogs::with(['course', 'bookings.user'])->get();
 
         $events = $booking
-            ->filter(function ($item) {
-                return $item->status == 2;
-            })
             ->groupBy(function ($item) {
-                return \Carbon\Carbon::parse($item->booking_date)->format('Y-m-d');
+                return \Carbon\Carbon::parse($item->teaching_schedule_day)->toDateString();
             })
             ->map(function ($items) {
                 return $items->unique('course_id')->map(function ($item) {
+                    // แยกช่วงเวลา scheduled_datetime ออกเป็น start กับ end
+                    $times = explode(' - ', $item->scheduled_datetime);
+                    $startTime = $times[0] ?? null;
+                    $endTime = $times[1] ?? null;
+
+                    // สร้างตัวแปร time ให้อยู่ในรูปแบบ "HH:mm - HH:mm" หรือ "-" ถ้าไม่มีข้อมูล
+                    $timeString = '-';
+                    if ($startTime && $endTime) {
+                        $timeString = \Carbon\Carbon::parse($startTime)->format('H:i') . ' - ' . \Carbon\Carbon::parse($endTime)->format('H:i');
+                    } elseif ($startTime) {
+                        // ถ้ามีแค่เวลาเริ่มต้น
+                        $timeString = \Carbon\Carbon::parse($startTime)->format('H:i');
+                    }
+
                     return [
                         'id' => $item->id,
-                        'name' => $item->course->course_name,
+                        'name' => optional($item->user)->name ?? '-',
+                        'time' => $timeString,
                     ];
                 })->values();
             });
 
-
         return view('dashboard.tutor.teaching_schedule.page', compact('events'));
     }
 
-
     public function TeachingScheduleDetails($id)
     {
-        $mainBooking = CourseBooking::with('course')->findOrFail($id);
+        $bookings = BookingLogs::with('course', 'bookings')->findOrFail($id);
 
-        $bookings = CourseBooking::with(['course', 'teachings'])
-            ->where('course_id', $mainBooking->course_id)
-            ->whereDate('booking_date', $mainBooking->booking_date)
-            ->where('status', 2)
-            ->orderBy('booking_date')
-            ->get();
-
-        return view('dashboard.tutor.teaching_schedule.teaching_schedule_details.page_details', compact('bookings', 'mainBooking'));
+        return view('dashboard.tutor.teaching_schedule.teaching_schedule_details.page_details', compact('bookings'));
     }
+
 
     public function TeachingScheduleUpdateStatus($id)
     {

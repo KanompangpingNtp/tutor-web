@@ -13,18 +13,23 @@
                     <thead>
                         <tr>
                             <th class="text-center">ชื่อคอร์ส</th>
+                            <th class="text-center">ชื่อผู้เรียน</th> <!-- เพิ่มหัวตาราง -->
                             <th class="text-center">วันที่สอน</th>
+                            <th class="text-center">จำนวนชั่วโมงที่สอน</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($teachingLogs as $log)
                         <tr>
                             <td>{{ $log->course->course_name ?? '-' }}</td>
-                            <td class="text-center">{{ \Carbon\Carbon::parse($log->log_date_time)->format('Y-m-d H:i') }}</td>
+                            <td class="text-center">
+                                {{ $log->booking && $log->booking->user ? $log->booking->user->name ?? '-' : '-' }}
+                            </td>
+                            <td class="text-center">{{ \Carbon\Carbon::parse($log->teaching_date)->format('Y-m-d') }}</td>
+                            <td class="text-center">{{ $log->taught_hours ?? '-' }} ชั่วโมง</td>
                         </tr>
                         @endforeach
                     </tbody>
-
                 </table>
 
             </div>

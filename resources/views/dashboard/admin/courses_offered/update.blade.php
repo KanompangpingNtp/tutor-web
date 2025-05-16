@@ -5,6 +5,8 @@
     <div class="">
         <div class="card">
             <div class="card-body">
+                <h4 class="fw-bold py-3 mb-4 text-center">อัพเดทคอร์สที่เปิดสอน</h4>
+
                 <form action="{{ route('CoursesOfferedUpdate', $course->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
@@ -91,9 +93,13 @@
                     </div>
                     @endif
 
-                    <!-- ชั่วโมงการสอน -->
                     <div class="mb-3">
-                        <label class="form-label">ระยะเวลาคอร์ส</label>
+                        <label class="form-label">ราคาคอร์ส (บาท)</label>
+                        <input type="number" name="price" class="form-control" value="{{ $course->price }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">อธิบายระยะเวลาคอร์ส</label>
                         <input type="text" name="course_duration_hour" class="form-control" value="{{ old('course_duration_hour', $course->course_duration_hour) }}" required>
                     </div>
 
@@ -197,7 +203,9 @@
                         </div>
                     </template>
 
-                    <button type="submit" class="btn btn-primary">อัปเดตคอร์ส</button>
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary">อัปเดตคอร์ส</button>
+                    </div>
 
                 </form>
             </div>

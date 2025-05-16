@@ -14,12 +14,12 @@ class IncomeSummaryController extends Controller
         $month = $request->month ?? now()->month;
         $year = $request->year ?? now()->year;
 
-        $availableMonths = CourseBooking::selectRaw('MONTH(booking_date) as month')
+        $availableMonths = CourseBooking::selectRaw('MONTH(created_at) as month')
             ->distinct()
             ->pluck('month')
             ->toArray();
 
-        $availableYears = CourseBooking::selectRaw('YEAR(booking_date) as year')
+        $availableYears = CourseBooking::selectRaw('YEAR(created_at) as year')
             ->distinct()
             ->pluck('year')
             ->toArray();
@@ -35,7 +35,7 @@ class IncomeSummaryController extends Controller
             foreach ($tutor->courses as $course) {
                 foreach ($course->teachings as $teaching) {
                     $filteredBookings = $teaching->bookings->filter(function ($booking) use ($month, $year) {
-                        $date = \Carbon\Carbon::parse($booking->booking_date);
+                        $date = \Carbon\Carbon::parse($booking->created_at);
                         return (
                             (!$month || $date->month == $month) &&
                             (!$year || $date->year == $year) &&
