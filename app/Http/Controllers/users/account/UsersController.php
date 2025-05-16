@@ -12,6 +12,9 @@ use Carbon\Carbon;
 
 class UsersController extends Controller
 {
+    public $channelToken = 'rXAqVM4Sst0WA8i3aSmEAhKcwqdY4o4zO+dOkzAY3E/h7Ykx1FOUaXdE2avc1a4IvsOW9EntkqXExh0DN4BHBzMv5gLBRXjdyIiVMh3wP4Ff5yMIRMM+t7zDE2Umab5h2ka39GPidW3dzYxqS2Q0NgdB04t89/1O/w1cDnyilFU=';
+    public $group_id = 'Ca15d5804ebf27251b427533420e27e6f';
+
     public function UsersAccount()
     {
         $booking = CourseBooking::with(['course.teachings.day', 'teachings', 'course.user'])
@@ -92,12 +95,10 @@ class UsersController extends Controller
         $request->validate([
             'scheduled_datetime' => 'required|array|min:1',
             'scheduled_datetime.*' => 'required|integer|exists:course_teachings,id',
-            'learning_style' => 'nullable|string',
             'note' => 'nullable|string',
         ]);
 
         $booking = CourseBooking::findOrFail($id);
-        $booking->learning_style = $request->learning_style;
         $booking->note = $request->note ?? null;
 
         $scheduledIds = $request->scheduled_datetime;
@@ -157,7 +158,70 @@ class UsersController extends Controller
             $currentDate->addDay();
         }
 
+        $userName = $booking->user->name ?? '-';
+        $courseName = $booking->course->course_name ?? '-';
+        $tutorName = $booking->course->user->name ?? '-';
+
+        // ดึง BookingLogs ล่าสุดที่สร้าง
+        $latestLogs = BookingLogs::where('course_booking_id', $booking->id)
+            ->orderBy('teaching_schedule_day')
+            ->get();
+
+        // เตรียมข้อความตามรูปแบบ
+        $message = "ชื่อผู้จอง : {$userName}\n";
+        $message .= "จองคอร์สชื่อ : {$courseName}\n";
+        $message .= "ครูผู้สอน : {$tutorName}\n";
+
+        // วนทุก log เพื่อแนบข้อมูลวัน/เวลาเรียน
+        foreach ($latestLogs as $log) {
+            $date = Carbon::parse($log->teaching_schedule_day)->format('d/m/Y');
+            $message .= "เรียนวันที่ : {$date} เวลาเรียน : {$log->scheduled_datetime}\n";
+        }
+
+        // รวมจำนวนชั่วโมงทั้งหมด
+        $totalHours = $latestLogs->sum(function ($log) {
+            [$start, $end] = explode(' - ', $log->scheduled_datetime);
+            return Carbon::parse($end)->floatDiffInHours(Carbon::parse($start));
+        });
+
+        $message .= "จำนวนชั่วโมง : {$totalHours} ชั่วโมง";
+
+        $this->sendChat($message);
+
         return redirect()->back()->with('success', 'บันทึกวันเวลาเรียนสำเร็จแล้ว');
+    }
+
+    public function sendChat($data)
+    {
+        $messageData = [
+            'to' => $this->group_id,
+            'messages' => [
+                [
+                    'type' => 'text',
+                    'text' => $data
+                ],
+            ]
+        ];
+
+        $ch = curl_init('https://api.line.me/v2/bot/message/push');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->channelToken
+        ]);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($messageData));
+
+        $result = curl_exec($ch);
+        $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpStatus == 200) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function UsersAccountBooking($id)
