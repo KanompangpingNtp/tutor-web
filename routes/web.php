@@ -104,6 +104,8 @@ Route::middleware(['auth', 'check.level:2'])->group(function () {
     Route::put('/tutor/subject_users/update/{id}', [SubjectTutorController::class, 'SubjectTutorUpdate'])->name('SubjectTutorUpdate');
 
     Route::get('/tutor/courses_offered', [TutorCoursesOfferedController::class, 'TutorCoursesOfferedPage'])->name('TutorCoursesOfferedPage');
+    Route::get('/tutor/courses_offered/create/page', [TutorCoursesOfferedController::class, 'TutorCoursesOfferedCreatePage'])->name('TutorCoursesOfferedCreatePage');
+    Route::get('/tutor/courses-offered/update/page/{id}', [TutorCoursesOfferedController::class, 'TutorCoursesOfferedUpdatePage'])->name('TutorCoursesOfferedUpdatePage');
     Route::post('/tutor/courses_offered/create', [TutorCoursesOfferedController::class, 'TutorCoursesOfferedCreate'])->name('TutorCoursesOfferedCreate');
     Route::delete('/tutor/courses_offered/delete/{id}', [TutorCoursesOfferedController::class, 'TutordeleteCourse'])->name('TutordeleteCourse');
     Route::put('/tutor/courses_offered/update/{id}', [TutorCoursesOfferedController::class, 'TutorCoursesOfferedUpdate'])->name('TutorCoursesOfferedUpdate');
