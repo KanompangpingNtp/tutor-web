@@ -125,7 +125,7 @@
                                 @if ($course->teachings->isEmpty())
                                 <p>ไม่มีข้อมูลการสอน</p>
                                 @else
-                                <table class="table table-bordered">
+                                <table class="table table-bordered" id="data_table">
                                     <thead>
                                         <tr>
                                             <th>วันสอน</th>
@@ -176,5 +176,7 @@
         </div>
     </div>
 </div>
+
+<script src="{{asset('js/datatable.js')}}"></script>
 
 @endsection
