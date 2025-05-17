@@ -27,69 +27,6 @@ class UsersController extends Controller
         );
     }
 
-    // public function schedule(Request $request, $id)
-    // {
-    //     $request->validate([
-    //         'scheduled_datetime' => 'required|array|min:1',
-    //         'scheduled_datetime.*' => 'required|integer|exists:course_teachings,id',
-    //         'learning_style' => 'nullable|string',
-    //         'note' => 'nullable|string',
-    //     ]);
-
-    //     $booking = CourseBooking::findOrFail($id);
-    //     $booking->learning_style = $request->learning_style;
-    //     $booking->note = $request->note ?? null;
-
-    //     $scheduledIds = $request->scheduled_datetime;
-    //     $booking->scheduled_datetime = implode(',', $scheduledIds);
-    //     $booking->save();
-
-    //     $teachings = CourseTeaching::whereIn('id', $scheduledIds)->with('day')->get();
-
-    //     $startDate = Carbon::parse($booking->created_at)->startOfDay();
-
-    //     $teachingsByDay = [];
-    //     foreach ($teachings as $teaching) {
-    //         $dayName = $teaching->day->day_name ?? null;
-    //         if ($dayName) {
-    //             if (!isset($teachingsByDay[$dayName])) {
-    //                 $teachingsByDay[$dayName] = [];
-    //             }
-    //             $teachingsByDay[$dayName][] = $teaching;
-    //         }
-    //     }
-
-    //     $dates = [];
-    //     $currentDate = $startDate->copy();
-
-    //     while (count($dates) < $booking->amount_times) {
-    //         $currentDayName = $currentDate->format('l');
-
-    //         if (isset($teachingsByDay[$currentDayName])) {
-    //             $dates[] = $currentDate->copy();
-    //         }
-    //         $currentDate->addDay();
-    //     }
-
-    //     foreach ($dates as $date) {
-    //         $dayName = $date->format('l');
-    //         foreach ($teachingsByDay[$dayName] as $teaching) {
-    //             BookingLogs::create([
-    //                 'user_id' => $booking->user_id,
-    //                 'course_id' => $booking->course_id,
-    //                 'course_booking_id' => $booking->id,
-    //                 'booking_day' => $dayName,
-    //                 'scheduled_datetime' => $teaching->course_starttime . ' - ' . $teaching->course_endtime,
-    //                 'teaching_schedule_day' => $date->format('Y-m-d'),
-    //                 'teaching_id' => $teaching->id,
-    //                 'status' => 1,
-    //             ]);
-    //         }
-    //     }
-
-    //     return redirect()->back()->with('success', 'บันทึกวันเวลาเรียนสำเร็จแล้ว');
-    // }
-
     public function schedule(Request $request, $id)
     {
         $request->validate([
@@ -229,5 +166,16 @@ class UsersController extends Controller
         $booking = CourseBooking::with(['course.teachings', 'teachings'])->findOrFail($id);
 
         return view('pages.user-account.booking_create', compact('booking'));
+    }
+
+    public function UserTeachingSchedule($id)
+    {
+        $courseBooking = CourseBooking::with(['course', 'teachings','user'])->findOrFail($id);
+
+        $bookingLogs = BookingLogs::with(['user', 'course', 'bookings', 'teaching'])
+            ->where('course_booking_id', $id)
+            ->get();
+
+        return view('pages.user-account.teaching_schedule', compact('bookingLogs','courseBooking'));
     }
 }

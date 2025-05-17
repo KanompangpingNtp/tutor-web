@@ -34,7 +34,7 @@ use App\Http\Controllers\users\account\UsersController;
 */
 
 Route::get('/test', function () {
-    return view('pages.detail-course');
+    return view('pages.user-account.test');
 });
 
 
@@ -122,4 +122,6 @@ Route::middleware(['auth', 'check.level:3'])->group(function () {
     Route::post('/users/account/booking/schedule/{id}', [UsersController::class, 'schedule'])->name('booking.schedule');
     Route::get('/user-account/booking/{id}', [UsersController::class, 'UsersAccountBooking'])->name('UsersAccountBooking');
     Route::post('/course_bookings/create', [CourseController::class, 'BookingCreate'])->name('BookingCreate');
+
+    Route::get('/users/account/teaching_schedule/{id}', [UsersController::class, 'UserTeachingSchedule'])->name('UserTeachingSchedule');
 });

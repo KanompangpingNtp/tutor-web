@@ -62,7 +62,6 @@
         text-overflow: ellipsis;
     }
 
-
 </style>
 
 <body>
@@ -75,75 +74,76 @@
             <br>
             <br>
 
-            <table class="table table-striped" id="data_table" style="font-size: 16px;">
-                <thead>
-                    <tr>
-                        <th class="text-center">ชื่อคุณครู</th>
-                        <th class="text-center">ชื่อคอร์ส</th>
-                        <th class="text-center">วันที่จอง</th>
-                        <th class="text-center">วันเวลาเรียน</th>
-                        <th class="text-center">หมายเหตุ</th>
-                        <th class="text-center">การจอง</th>
-                        <th class="text-center">การชำระเงิน</th>
-                        <th class="text-center">สถานะ</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($booking as $item)
-                    <tr class="text-center">
-                        <td>{{ $item->course->user->name ?? '-' }}</td>
-                        <td>{{ $item->course->course_name ?? '-' }}</td>
-                        <td>{{ \Carbon\Carbon::parse($item->booking_date)->format('d/m/Y') }}</td>
-                        <td>
-                            @if ($item->teachings)
-                            {{ $item->teachings->day->day_name ?? '-' }} :
-                            {{ \Carbon\Carbon::parse($item->teachings->course_starttime)->format('H:i') }} -
-                            {{ \Carbon\Carbon::parse($item->teachings->course_endtime)->format('H:i') }}
-                            @else
-                            -
-                            @endif
-                        </td>
-                        <td>{{ $item->note ?? '-' }}</td>
-                        <td>
-                            @if (is_null($item->scheduled_datetime) && $item->payment_status === '1')
-                            <span class="text-muted">-</span>
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0 text-center">ข้อมูลการจอง</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="data_table" style="font-size: 16px;">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">ชื่อคุณครู</th>
+                                    <th class="text-center">ชื่อคอร์ส</th>
+                                    <th class="text-center">วันที่จอง</th>
+                                    <th class="text-center">หมายเหตุ</th>
+                                    <th class="text-center">การจอง</th>
+                                    <th class="text-center">การชำระเงิน</th>
+                                    <th class="text-center">สถานะ</th>
+                                    <th class="text-center">ตารางสอน</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($booking as $item)
+                                <tr class="text-center">
+                                    <td>{{ $item->course->user->name ?? '-' }}</td>
+                                    <td>{{ $item->course->course_name ?? '-' }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->updated_at)->format('d/m/Y') }}</td>
+                                    <td>{{ $item->note ?? '-' }}</td>
+                                    <td>
+                                        @if (is_null($item->scheduled_datetime) && $item->payment_status === '1')
+                                        <span class="text-muted">-</span>
+                                        @elseif (is_null($item->scheduled_datetime) && $item->payment_status === '2')
+                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#bookingModal{{ $item->id }}">
+                                            จอง
+                                        </button>
+                                        @elseif (!is_null($item->scheduled_datetime) && $item->payment_status === '2')
+                                        <span class="badge bg-success">จองแล้ว</span>
+                                        @else
+                                        <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($item->payment_status === '2')
+                                        <span class="badge bg-success">ชำระเงินแล้ว</span>
+                                        @elseif($item->payment_status === '1')
+                                        <span class="badge bg-warning">ยังไม่ชำระเงิน</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($item->status === '2')
+                                        <span class="badge bg-success">อนุมัติแล้ว</span>
+                                        @elseif($item->status === '1')
+                                        <span class="badge bg-warning">รอดำเนินการ</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($item->status === '2')
+                                        <a href="{{ route('UserTeachingSchedule', $item->id) }}" class="btn btn-primary btn-sm">
+                                            <i class="bi bi-table"></i>
+                                        </a>
+                                        @elseif ($item->status === '1')
+                                        -
+                                        @endif
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-                            @elseif (is_null($item->scheduled_datetime) && $item->payment_status === '2')
-                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#bookingModal{{ $item->id }}">
-                                จอง
-                            </button>
-
-                            @elseif (!is_null($item->scheduled_datetime) && $item->payment_status === '2')
-                            <span class="text-success">จองแล้ว</span>
-
-                            @else
-                            <span class="text-muted">-</span>
-                            @endif
-                        </td>
-                        <td>
-                            @if($item->payment_status === '2')
-                            <span class="text-success">ชำระแล้ว</span>
-                            @elseif($item->payment_status === '1')
-                            <span class="text-danger">ยังไม่ชำระ</span>
-                            @else
-                            <span class="text-secondary">-</span>
-                            @endif
-                        </td>
-                        <td>
-                            @if($item->status === '3')
-                            <span class="text-success">อนุมัติแล้ว</span>
-                            @elseif($item->status === '2')
-                            <span class="text-warning text-dark">รอดำเนินการ</span>
-                            @elseif($item->status === '1')
-                            <span class="text-danger">ยังไม่อนุมัติ</span>
-                            @else
-                            <span class="text-secondary">-</span>
-                            @endif
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
 
             @foreach ($booking as $item)
             <div class="modal fade" id="bookingModal{{ $item->id }}" tabindex="-1" aria-labelledby="bookingModalLabel{{ $item->id }}" aria-hidden="true">
