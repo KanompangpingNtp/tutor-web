@@ -17,14 +17,19 @@ class UsersController extends Controller
 
     public function UsersAccount()
     {
+        $userId = Auth::id();
+
         $booking = CourseBooking::with(['course.teachings.day', 'teachings', 'course.user'])
-            ->where('user_id', Auth::id())
+            ->where('user_id', $userId)
             ->get();
 
-        return view(
-            'pages.user-account.page',
-            compact('booking')
-        );
+        // teaching_id ที่ยังมี status != 2 (แปลว่าเรียนยังไม่ครบ)
+        $incompleteTeachingIds = BookingLogs::where('status', '!=', 2)
+            ->pluck('teaching_id')
+            ->unique()
+            ->toArray();
+
+        return view('pages.user-account.page', compact('booking', 'incompleteTeachingIds'));
     }
 
     public function schedule(Request $request, $id)
@@ -170,12 +175,12 @@ class UsersController extends Controller
 
     public function UserTeachingSchedule($id)
     {
-        $courseBooking = CourseBooking::with(['course', 'teachings','user'])->findOrFail($id);
+        $courseBooking = CourseBooking::with(['course', 'teachings', 'user'])->findOrFail($id);
 
         $bookingLogs = BookingLogs::with(['user', 'course', 'bookings', 'teaching'])
             ->where('course_booking_id', $id)
             ->get();
 
-        return view('pages.user-account.teaching_schedule', compact('bookingLogs','courseBooking'));
+        return view('pages.user-account.teaching_schedule', compact('bookingLogs', 'courseBooking'));
     }
 }

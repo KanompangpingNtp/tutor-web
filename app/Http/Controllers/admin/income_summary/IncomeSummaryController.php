@@ -109,7 +109,6 @@ class IncomeSummaryController extends Controller
 
         $summary = collect($summary);
 
-        // ✅ ดึง month + year ที่มีข้อมูลจริง
         $monthsYearsRaw = BookingLogs::selectRaw('MONTH(created_at) as month, YEAR(created_at) as year')
             ->groupBy('month', 'year')
             ->orderBy('year')
@@ -119,12 +118,10 @@ class IncomeSummaryController extends Controller
         $monthsAvailable = $monthsYearsRaw->pluck('month')->unique()->toArray();
         $yearsAvailable = $monthsYearsRaw->pluck('year')->unique()->toArray();
 
-        // ✅ สร้าง range ปีอย่างปลอดภัย
         $minYear = !empty($yearsAvailable) ? min($yearsAvailable) : now()->year;
         $maxYear = !empty($yearsAvailable) ? max($yearsAvailable) : now()->year;
         $allYears = range($minYear, $maxYear);
 
-        // ✅ เดือน 1-12
         $allMonths = range(1, 12);
 
         return view('dashboard.admin.income_summary.page', compact(
@@ -133,7 +130,7 @@ class IncomeSummaryController extends Controller
             'allYears',
             'monthsAvailable',
             'yearsAvailable',
-            'monthsYearsRaw' // 👉 ส่งไปให้ view ใช้ได้ด้วย
+            'monthsYearsRaw'
         ));
     }
 }
