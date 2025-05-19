@@ -169,19 +169,6 @@
 
                                 <div class="form-group mb-3 col-md-12">
                                     <label for="scheduled_datetime">ช่วงเวลาที่ต้องการเรียน</label>
-                                    {{-- <select id="scheduled_datetime" name="scheduled_datetime[]" class="form-control selectpicker" multiple data-live-search="true" required>
-                                        <option value="">-- กรุณาเลือกเวลา --</option>
-                                        @foreach ($item->course->teachings as $teaching)
-                                        @php
-                                        $start = \Carbon\Carbon::parse($teaching->course_starttime)->format('H:i');
-                                        $end = \Carbon\Carbon::parse($teaching->course_endtime)->format('H:i');
-                                        $dayName = $teaching->day->day_name ?? 'ไม่ทราบวัน';
-                                        @endphp
-                                        <option value="{{ $teaching->id }}" data-day="{{ $dayName }}">
-                                    {{ $dayName }} {{ $start }} - {{ $end }}
-                                    </option>
-                                    @endforeach
-                                    </select> --}}
                                     <select id="scheduled_datetime" name="scheduled_datetime[]" class="form-control selectpicker" multiple data-live-search="true" required>
                                         <option value="">-- กรุณาเลือกเวลา --</option>
                                         @foreach ($item->course->teachings as $teaching)
